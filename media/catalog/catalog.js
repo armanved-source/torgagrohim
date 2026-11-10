@@ -7,12 +7,12 @@
 (function () {
   var D = window.TAH_CATALOG; var root = document.getElementById('tahc');
   if (!D || !root) return;
-  var WA = root.getAttribute('data-wa') || '79283120201';
+  var WA = root.getAttribute('data-wa') || '79668889299';
   var TEL = root.getAttribute('data-tel') || '+79187441441';
   var IMG = window.TAH_IMG || null; // в самодостаточных файлах картинки встроены
   var imgDir = root.getAttribute('data-img') || '../media/catalog/img/';
   var PAGE = 12;
-  var LOGO = { bashinkom: 'bashinkom.png', eurochem: 'eurochem.svg', agrimatco: 'agrimatco.png', kimitec: 'kimitec.svg', polyfeed: 'polyfeed.svg', biogrow: 'biogrow.png', bui: 'bui.png', acron: 'acron.png', daymsa: 'daymsa.png', pharmbiomed: 'pharmbiomed.png', agrosintez: 'agrosintez.png', nestm: 'nestm.png', mcfp: 'mcfp.png', biolchim: 'biolchim.png', ikar: 'ikar.svg', himagromarketing: 'himagromarketing.png', fertika: 'fertika.png' };
+  var LOGO = { bashinkom: 'bashinkom.png', eurochem: 'eurochem.svg', polyfeed: 'polyfeed.svg', biogrow: 'biogrow.png', bui: 'bui.png', acron: 'acron.png', daymsa: 'daymsa.png', pharmbiomed: 'pharmbiomed.png', agrosintez: 'agrosintez.png', nestm: 'nestm.png', mcfp: 'mcfp.png', biolchim: 'biolchim.png', ikar: 'ikar.svg', himagromarketing: 'himagromarketing.png', fertika: 'fertika.png', agrohimsintez: 'agrohimsintez.png' };
   var logoDir = root.getAttribute('data-logos') || '../media/partners/';
   var logoSrc = function (id) { var f = LOGO[id]; if (!f) return ''; return (window.TAH_LOGO && window.TAH_LOGO[f]) || logoDir + f; };
 

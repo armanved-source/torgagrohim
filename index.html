@@ -4,11 +4,11 @@
 <meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ЕТС ТоргАгроХим — питаем, защищаем, растим</title>
+<title>ЕТС ТоргАгроХим — питаем, защищаем, ростим</title>
 <link rel="icon" href="media/img/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="media/img/favicon-32.png">
 <link rel="apple-touch-icon" href="media/img/apple-touch-icon.png">
-<meta name="description" content="Удобрения, средства защиты, биопрепараты и субстраты. Каталог 489 позиций. Склады в Махачкале, Дагестанских Огнях и Александровском.">
+<meta name="description" content="Удобрения, средства защиты, биопрепараты и субстраты. Каталог 463 позиции. Склады в Махачкале, Дагестанских Огнях и Александровском.">
 <meta name="theme-color" content="#DA2924">
 <!--
   Вариант 9 — в стиле сайта oishii.com (понравился пользователю 17.10.2026): красная полоса сверху,
@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="media/fonts/sourceserif.css">
 <link rel="stylesheet" href="media/fonts/onest.css">
 <style>
-:root{
+:root{--hd:104px;
   --red:#DA2924; --red-d:#B91F1B; --wine:#431112;
   --ink:#1A1A1A; --muted:#5C5C58; --line:#E3E3DF; --white:#FFFFFF;
   --todo-bg:#FFF0D2; --todo:#7A4A00;
@@ -39,8 +39,10 @@ a{color:inherit}
 .ph{width:1.1em;height:1.1em;flex:none}
 .wrap{width:min(1380px,100% - 48px);margin-inline:auto}
 :focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:4px}
-/* якоря из меню и полосы: отступ под липкую шапку (72/62px), как у #catalog в catalog.js */
-#about,#grounds,#directions,#stores,#contacts,#partners{scroll-margin-top:84px}
+/* якоря из меню и полосы: отступ под липкую шапку (--hd: 104/82px) */
+#about,#grounds,#directions,#stores,#contacts,#partners{scroll-margin-top:calc(var(--hd) + 12px)}
+/* панель каталога: catalog.js ставит ей 84px в стиле элемента (общий для старых вариантов), здесь шапка выше */
+.tc-bar{scroll-margin-top:calc(var(--hd) + 12px)!important}
 h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;line-height:1.12;text-wrap:balance}
 h2{font-size:clamp(28px,2.6vw,36px)}
 .cap{font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
@@ -56,12 +58,12 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 .bar{background:var(--red);color:#fff;text-align:center;font-size:12.5px;padding:8px 40px;position:relative}
 .bar a{color:#fff;display:inline-block;padding:6px 0;margin:-6px 0}
 .top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--ink)}
-.top .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:72px;gap:20px}
+.top .wrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:var(--hd);gap:20px}
 .top nav{display:flex;gap:26px}
 .top nav a{font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:8px 0}
 .top nav a:hover{color:var(--red)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;justify-self:center}
-.brand img{height:44px;width:auto}
+.brand img{height:92px;width:auto}
 .brand span{font-family:var(--serif);font-size:30px;letter-spacing:-.01em;line-height:1}
 .top .r{justify-self:end;display:flex;align-items:center;gap:14px}
 .top .wa{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;text-decoration:none}
@@ -72,20 +74,23 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 .burger .bx{display:none}
 .top.open .bx{display:block}.top.open .bl{display:none}
 @media (max-width:900px){
-  .top .wrap{grid-template-columns:auto 1fr auto;height:62px}
+  :root{--hd:82px}
+  .top .wrap{grid-template-columns:auto 1fr auto}
   .top nav{display:none}
   .burger{display:inline-flex}
-  .brand{justify-self:start}.brand img{height:34px}
+  .brand{justify-self:start}.brand img{height:70px}
   .top .pill{display:none}
-  .top.open nav{display:flex;flex-direction:column;gap:0;position:absolute;top:62px;left:0;right:0;background:#fff;border-bottom:1px solid var(--ink);padding:6px 24px 16px}
+  .top.open nav{display:flex;flex-direction:column;gap:0;position:absolute;top:var(--hd);left:0;right:0;background:#fff;border-bottom:1px solid var(--ink);padding:6px 24px 16px}
   .top.open nav a{padding:14px 0;border-bottom:1px solid var(--line);font-size:13px}
 }
 
 /* Первый экран: живое фото на всю ширину */
 .hero{position:relative;height:min(86svh,820px);min-height:520px;overflow:hidden;isolation:isolate;color:#fff;display:flex;align-items:flex-end}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% 50%;z-index:-2}
-.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.1) 55%),linear-gradient(0deg,rgba(0,0,0,.45),rgba(0,0,0,0) 45%)}
-.hero .wrap{padding-bottom:56px}
+.hero img,.g img,.card img,.pic img{filter:brightness(1.05) saturate(1.14)}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 62% 78% at 0% 100%,rgba(0,0,0,.6),rgba(0,0,0,.28) 55%,rgba(0,0,0,0) 100%)}
+.hero .wrap{padding-bottom:56px;text-shadow:0 1px 3px rgba(0,0,0,.55),0 2px 16px rgba(0,0,0,.6)}
+@media (max-width:700px){.hero::before{background:linear-gradient(0deg,rgba(0,0,0,.7),rgba(0,0,0,.5) 34%,rgba(0,0,0,0) 60%)}}
 .hero h1{font-size:clamp(40px,4.6vw,64px);max-width:12ch}
 .hero p{max-width:40ch;margin:14px 0 20px;font-size:15.5px;color:#F2F2EE}
 .hero .ul{color:#fff;background-image:linear-gradient(#fff,#fff)}
@@ -126,9 +131,9 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 .g{position:relative;overflow:hidden;margin:0;color:#fff;display:flex;align-items:flex-end;isolation:isolate}
 .g.big{grid-row:span 2}
 .g img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1s var(--ease)}
-.g::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(0,0,0,.7),rgba(0,0,0,.08) 62%)}
+.g::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(0,0,0,.58),rgba(0,0,0,0) 46%)}
 .g:hover img{transform:scale(1.04)}
-.g figcaption{padding:clamp(20px,2.4vw,32px);text-shadow:0 1px 12px rgba(0,0,0,.45)}
+.g figcaption{padding:clamp(20px,2.4vw,32px);text-shadow:0 1px 3px rgba(0,0,0,.55),0 2px 16px rgba(0,0,0,.6)}
 .g h3{font-size:clamp(22px,2vw,30px);margin-bottom:6px}
 .g.big h3{font-size:clamp(28px,3.2vw,46px)}
 .g p{font-size:14px;line-height:1.55;max-width:46ch}
@@ -140,8 +145,8 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
 .card{position:relative;aspect-ratio:3/3.4;overflow:hidden;color:#fff;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;padding:26px;isolation:isolate}
 .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1s var(--ease)}
-.card::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.68),rgba(0,0,0,.12) 42%,rgba(0,0,0,.12) 62%,rgba(0,0,0,.6))}
-.card h3,.card .sub,.card .ul{text-shadow:0 1px 12px rgba(0,0,0,.45)}
+.card::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.58),rgba(0,0,0,.42) 20%,rgba(0,0,0,0) 40%,rgba(0,0,0,0) 72%,rgba(0,0,0,.5))}
+.card h3,.card .sub,.card .ul{text-shadow:0 1px 3px rgba(0,0,0,.55),0 2px 16px rgba(0,0,0,.6)}
 .card:hover img{transform:scale(1.05)}
 .card h3{font-size:clamp(24px,2.2vw,32px);text-align:center}
 .card .sub{display:block;text-align:center;font-size:13px;margin-top:4px;opacity:.95}
@@ -195,7 +200,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 
 .foot{border-top:1px solid var(--ink);padding:40px 0 30px}
 .foot .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:30px}
-.foot .brand{justify-self:start}
+.foot .brand{justify-self:start}.foot .brand img{height:150px}
 .foot p{font-size:13px;color:var(--muted);margin-top:12px;max-width:34ch}
 .foot h4{font-size:15px;font-weight:600;margin-bottom:10px}
 .foot ul{list-style:none;display:grid;gap:4px;font-size:13.5px}
@@ -220,23 +225,23 @@ h2{font-size:clamp(28px,2.6vw,36px)}
   <div class="wrap">
     <nav id="menu" aria-label="Разделы"><a href="#directions">Продукция</a><a href="#catalog">Каталог</a><a href="#stores">Склады</a><a href="#contacts">Контакты</a></nav>
     <button class="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="menu"><span class="bl"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></svg></span><span class="bx"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></span></button>
-    <a class="brand" href="#main" aria-label="ЕТС ТоргАгроХим — в начало"><img src="media/img/logo-dark.png" alt="ЕТС ТоргАгроХим" width="1200" height="300"></a>
-    <div class="r"><a class="pill" href="tel:+79187441441">Позвонить</a><a class="wa" href="https://wa.me/79283120201" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M187.58,144.84l-32-16a8,8,0,0,0-8,.5l-14.69,9.8a40.55,40.55,0,0,1-16-16l9.8-14.69a8,8,0,0,0,.5-8l-16-32A8,8,0,0,0,104,64a40,40,0,0,0-40,40,88.1,88.1,0,0,0,88,88,40,40,0,0,0,40-40A8,8,0,0,0,187.58,144.84ZM152,176a72.08,72.08,0,0,1-72-72A24,24,0,0,1,99.29,80.46l11.48,23L101,118a8,8,0,0,0-.73,7.51,56.47,56.47,0,0,0,30.15,30.15A8,8,0,0,0,138,155l14.61-9.74,23,11.48A24,24,0,0,1,152,176ZM128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></svg></a></div>
+    <a class="brand" href="#main" aria-label="ЕТС ТоргАгроХим — в начало"><img src="media/img/logo-full.png" alt="ЕТС ТоргАгроХим. Питаем. Защищаем. Ростим." width="640" height="507"></a>
+    <div class="r"><a class="pill" href="tel:+79187441441">Позвонить</a><a class="wa" href="https://wa.me/79668889299" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M187.58,144.84l-32-16a8,8,0,0,0-8,.5l-14.69,9.8a40.55,40.55,0,0,1-16-16l9.8-14.69a8,8,0,0,0,.5-8l-16-32A8,8,0,0,0,104,64a40,40,0,0,0-40,40,88.1,88.1,0,0,0,88,88,40,40,0,0,0,40-40A8,8,0,0,0,187.58,144.84ZM152,176a72.08,72.08,0,0,1-72-72A24,24,0,0,1,99.29,80.46l11.48,23L101,118a8,8,0,0,0-.73,7.51,56.47,56.47,0,0,0,30.15,30.15A8,8,0,0,0,138,155l14.61-9.74,23,11.48A24,24,0,0,1,152,176ZM128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></svg></a></div>
   </div>
 </header>
 
 <main id="main">
   <section class="hero">
-    <img src="media/img/unsplash/light-tomato-hero.jpg" alt="Кисти томатов в теплице" width="2000" height="1334" fetchpriority="high">
+    <img src="media/img/unsplash/light-hero-new.jpg" alt="Ряды томатов в теплице" width="2000" height="1333" fetchpriority="high">
     <div class="wrap">
-      <h1 class="st">Питаем. Защищаем. Растим.</h1>
+      <h1 class="st">Питаем. Защищаем. Ростим.</h1>
       <p class="st" style="--i:1">Удобрения, защита растений, биопрепараты и субстраты для хозяйств Дагестана и Ставропольского края.</p>
       <a class="ul st" style="--i:2" href="#catalog">Смотреть каталог</a>
     </div>
   </section>
 
   <div class="press" aria-label="Производители в ассортименте">
-    <div class="wrap"><span class="lbl">Наши партнёры</span><a href="#partner-eurochem" aria-label="Каталог: EuroChem"><img src="media/partners/eurochem.svg" alt="EuroChem" loading="lazy"></a><a href="#partner-bashinkom" aria-label="Каталог: BashInkom"><img src="media/partners/bashinkom.png" alt="BashInkom" loading="lazy"></a><a href="#partner-acron" aria-label="Каталог: ПАО «Акрон»"><img src="media/partners/acron.png" alt="ПАО «Акрон»" loading="lazy"></a><a class="sq" href="#partner-polyfeed" aria-label="Каталог: Haifa"><img src="media/partners/polyfeed.svg" alt="Haifa" loading="lazy"></a><a href="#partner-biolchim" aria-label="Каталог: Biolchim"><img src="media/partners/biolchim.png" alt="Biolchim" loading="lazy"></a><a href="#partner-kimitec" aria-label="Каталог: Kimitec"><img src="media/partners/kimitec.svg" alt="Kimitec" loading="lazy"></a><a class="sq" href="#partner-agrosintez" aria-label="Каталог: Агросинтез"><img src="media/partners/agrosintez.png" alt="Агросинтез" loading="lazy"></a><a href="#partner-bui" aria-label="Каталог: Буйский химический завод"><img src="media/partners/bui.png" alt="Буйский химический завод" loading="lazy"></a><a class="all" href="#partners">Все 17 →</a></div>
+    <div class="wrap"><span class="lbl">Наши партнёры</span><a href="#partner-eurochem" aria-label="Каталог: EuroChem"><img src="media/partners/eurochem.svg" alt="EuroChem" loading="lazy"></a><a href="#partner-bashinkom" aria-label="Каталог: BashInkom"><img src="media/partners/bashinkom.png" alt="BashInkom" loading="lazy"></a><a href="#partner-acron" aria-label="Каталог: ПАО «Акрон»"><img src="media/partners/acron.png" alt="ПАО «Акрон»" loading="lazy"></a><a class="sq" href="#partner-polyfeed" aria-label="Каталог: Haifa"><img src="media/partners/polyfeed.svg" alt="Haifa" loading="lazy"></a><a href="#partner-biolchim" aria-label="Каталог: Biolchim"><img src="media/partners/biolchim.png" alt="Biolchim" loading="lazy"></a><a class="sq" href="#partner-agrosintez" aria-label="Каталог: Агросинтез"><img src="media/partners/agrosintez.png" alt="Агросинтез" loading="lazy"></a><a href="#partner-bui" aria-label="Каталог: Буйский химический завод"><img src="media/partners/bui.png" alt="Буйский химический завод" loading="lazy"></a><a class="sq" href="#partner-agrohimsintez" aria-label="Каталог: АгроХимСинтез"><img src="media/partners/agrohimsintez.png" alt="АгроХимСинтез" loading="lazy"></a><a class="all" href="#partners">Все 16 →</a></div>
   </div>
 
   <section class="wrap split rv" id="about">
@@ -263,7 +268,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
       <h2>Решение для вашего хозяйства</h2>
       <p>Расскажите менеджеру, что и как вы выращиваете,&nbsp;— он предложит питание и защиту, которые подойдут именно вам.</p>
       <ol><li>Расскажите о культуре, площади и технологии.</li><li>Получите подбор, цену, фасовку и наличие.</li><li>Заберите заказ на ближайшем складе.</li></ol>
-      <a class="ul" href="https://wa.me/79283120201" target="_blank" rel="noopener">Написать в WhatsApp</a>
+      <a class="ul" href="https://wa.me/79668889299" target="_blank" rel="noopener">Написать в WhatsApp</a>
     </div>
   </section>
 
@@ -281,10 +286,10 @@ h2{font-size:clamp(28px,2.6vw,36px)}
     </div>
   </section>
 
-  <section class="cat-sec" id="catalog">
+  <section class="cat-sec" id="catalog" style="scroll-margin-top:calc(var(--hd) + 12px)">
     <div class="wrap">
-      <div class="head"><h2 class="rv">Каталог продукции</h2><p class="rv" style="--i:1">489 позиций от 17 производителей. Найдите товар и спросите цену в WhatsApp — менеджер ответит.</p></div>
-      <div class="tahc" id="tahc" data-img="media/catalog/img/" data-logos="media/partners/" data-wa="79283120201" data-tel="+79187441441"><noscript><span id="catalog-fertilizers" style="display:block;scroll-margin-top:90px"></span><span id="catalog-water-soluble" style="display:block;scroll-margin-top:90px"></span><span id="catalog-fertigation" style="display:block;scroll-margin-top:90px"></span><span id="catalog-granular" style="display:block;scroll-margin-top:90px"></span><span id="catalog-liquid" style="display:block;scroll-margin-top:90px"></span><span id="catalog-micronutrients" style="display:block;scroll-margin-top:90px"></span><span id="catalog-protection" style="display:block;scroll-margin-top:90px"></span><span id="catalog-fungicides" style="display:block;scroll-margin-top:90px"></span><span id="catalog-bactericides" style="display:block;scroll-margin-top:90px"></span><span id="catalog-herbicides" style="display:block;scroll-margin-top:90px"></span><span id="catalog-seed-treatments" style="display:block;scroll-margin-top:90px"></span><span id="catalog-desiccants" style="display:block;scroll-margin-top:90px"></span><span id="catalog-fumigants" style="display:block;scroll-margin-top:90px"></span><span id="catalog-disinfectants" style="display:block;scroll-margin-top:90px"></span><span id="catalog-insecticides" style="display:block;scroll-margin-top:90px"></span><span id="catalog-acaricides" style="display:block;scroll-margin-top:90px"></span><span id="catalog-adjuvants" style="display:block;scroll-margin-top:90px"></span><span id="catalog-bio" style="display:block;scroll-margin-top:90px"></span><span id="catalog-entomophages" style="display:block;scroll-margin-top:90px"></span><span id="catalog-stimulants" style="display:block;scroll-margin-top:90px"></span><span id="catalog-substrates" style="display:block;scroll-margin-top:90px"></span><span id="catalog-seeds" style="display:block;scroll-margin-top:90px"></span><span id="partner-bashinkom" style="display:block;scroll-margin-top:90px"></span><span id="partner-eurochem" style="display:block;scroll-margin-top:90px"></span><span id="partner-agrimatco" style="display:block;scroll-margin-top:90px"></span><span id="partner-kimitec" style="display:block;scroll-margin-top:90px"></span><span id="partner-polyfeed" style="display:block;scroll-margin-top:90px"></span><span id="partner-biogrow" style="display:block;scroll-margin-top:90px"></span><span id="partner-bui" style="display:block;scroll-margin-top:90px"></span><span id="partner-acron" style="display:block;scroll-margin-top:90px"></span><span id="partner-daymsa" style="display:block;scroll-margin-top:90px"></span><span id="partner-pharmbiomed" style="display:block;scroll-margin-top:90px"></span><span id="partner-agrosintez" style="display:block;scroll-margin-top:90px"></span><span id="partner-nestm" style="display:block;scroll-margin-top:90px"></span><span id="partner-mcfp" style="display:block;scroll-margin-top:90px"></span><span id="partner-biolchim" style="display:block;scroll-margin-top:90px"></span><span id="partner-ikar" style="display:block;scroll-margin-top:90px"></span><span id="partner-himagromarketing" style="display:block;scroll-margin-top:90px"></span><span id="partner-fertika" style="display:block;scroll-margin-top:90px"></span><p style="padding:22px;border:1px dashed currentColor;border-radius:8px;max-width:62ch">Каталог не загрузился: файл открыт в режиме просмотра, где не работают кнопки. Откройте его в браузере (Safari или Chrome) — появятся 489 позиций, поиск и фильтры. Или спросите цену в <a href="https://wa.me/79283120201">WhatsApp</a>.</p></noscript></div>
+      <div class="head"><h2 class="rv">Каталог продукции</h2><p class="rv" style="--i:1">463 позиции от 16 производителей. Найдите товар и спросите цену в WhatsApp — менеджер ответит.</p></div>
+      <div class="tahc" id="tahc" data-img="media/catalog/img/" data-logos="media/partners/" data-wa="79668889299" data-tel="+79187441441"><noscript><span id="catalog-fertilizers" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-water-soluble" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-fertigation" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-granular" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-liquid" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-micronutrients" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-protection" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-fungicides" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-bactericides" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-herbicides" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-seed-treatments" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-desiccants" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-fumigants" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-disinfectants" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-insecticides" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-acaricides" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-adjuvants" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-bio" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-entomophages" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-stimulants" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-substrates" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="catalog-seeds" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-bashinkom" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-eurochem" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-agrohimsintez" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-polyfeed" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-biogrow" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-bui" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-acron" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-daymsa" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-pharmbiomed" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-agrosintez" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-nestm" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-mcfp" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-biolchim" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-ikar" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-himagromarketing" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><span id="partner-fertika" style="display:block;scroll-margin-top:calc(var(--hd) + 12px)"></span><p style="padding:22px;border:1px dashed currentColor;border-radius:8px;max-width:62ch">Каталог не загрузился: файл открыт в режиме просмотра, где не работают кнопки. Откройте его в браузере (Safari или Chrome) — появятся 463 позиции, поиск и фильтры. Или спросите цену в <a href="https://wa.me/79668889299">WhatsApp</a>.</p></noscript></div>
     </div>
   </section>
 
@@ -297,7 +302,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
   <section class="wrap" id="stores" style="margin-top:-1px">
     <div class="stores">
       <article class="store rv"><span class="cap">Республика Дагестан</span><h3>Махачкала</h3><dl><dt>Адрес</dt><dd>Кировский р-н, пр. Казбекова, 367</dd><dt>Телефон</dt><dd><a href="tel:+79668889299" style="color:inherit;text-underline-offset:3px;white-space:nowrap">+7 (966) 888-92-99</a></dd></dl><a class="ul" href="https://yandex.ru/maps/?text=%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0%20%D0%94%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD%2C%20%D0%9C%D0%B0%D1%85%D0%B0%D1%87%D0%BA%D0%B0%D0%BB%D0%B0%2C%20%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82%20%D0%9A%D0%B0%D0%B7%D0%B1%D0%B5%D0%BA%D0%BE%D0%B2%D0%B0%2C%20367" target="_blank" rel="noopener">Яндекс Карты</a></article>
-      <article class="store rv" style="--i:1"><span class="cap">Ставропольский край</span><h3>Александровское</h3><dl><dt>Адрес</dt><dd>ул. Заводская, 6, материальный склад №3</dd><dt>Телефоны</dt><dd><a href="tel:+79187441441" style="color:inherit;text-underline-offset:3px;white-space:nowrap">+7 (918) 744-14-41</a>, WhatsApp <a href="https://wa.me/79283120201" target="_blank" rel="noopener" style="color:inherit;text-underline-offset:3px;white-space:nowrap">+7 (928) 312-02-01</a></dd></dl><a class="ul" href="https://yandex.ru/maps/?text=%D0%A1%D1%82%D0%B0%D0%B2%D1%80%D0%BE%D0%BF%D0%BE%D0%BB%D1%8C%D1%81%D0%BA%D0%B8%D0%B9%20%D0%BA%D1%80%D0%B0%D0%B9%2C%20%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9%20%D1%80%D0%B0%D0%B9%D0%BE%D0%BD%2C%20%D1%81%D0%B5%D0%BB%D0%BE%20%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D1%81%D0%BA%D0%BE%D0%B5%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%97%D0%B0%D0%B2%D0%BE%D0%B4%D1%81%D0%BA%D0%B0%D1%8F%2C%206" target="_blank" rel="noopener">Яндекс Карты</a></article>
+      <article class="store rv" style="--i:1"><span class="cap">Ставропольский край</span><h3>Александровское</h3><dl><dt>Адрес</dt><dd>ул. Заводская, 6, материальный склад №3</dd><dt>Телефон</dt><dd><a href="tel:+79187441441" style="color:inherit;text-underline-offset:3px;white-space:nowrap">+7 (918) 744-14-41</a></dd></dl><a class="ul" href="https://yandex.ru/maps/?text=%D0%A1%D1%82%D0%B0%D0%B2%D1%80%D0%BE%D0%BF%D0%BE%D0%BB%D1%8C%D1%81%D0%BA%D0%B8%D0%B9%20%D0%BA%D1%80%D0%B0%D0%B9%2C%20%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9%20%D1%80%D0%B0%D0%B9%D0%BE%D0%BD%2C%20%D1%81%D0%B5%D0%BB%D0%BE%20%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D1%81%D0%BA%D0%BE%D0%B5%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%97%D0%B0%D0%B2%D0%BE%D0%B4%D1%81%D0%BA%D0%B0%D1%8F%2C%206" target="_blank" rel="noopener">Яндекс Карты</a></article>
       <article class="store rv" style="--i:2"><span class="cap">Республика Дагестан</span><h3>Дагестанские Огни</h3><dl><dt>Адрес</dt><dd>Дагестанский пр., 6</dd><dt>Телефон</dt><dd><a href="tel:+79285340160" style="color:inherit;text-underline-offset:3px;white-space:nowrap">+7 (928) 534-01-60</a></dd></dl><a class="ul" href="https://yandex.ru/maps/?text=%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0%20%D0%94%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD%2C%20%D0%94%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B5%20%D0%9E%D0%B3%D0%BD%D0%B8%2C%20%D0%94%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9%20%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82%2C%206" target="_blank" rel="noopener">Яндекс Карты</a></article>
     </div>
   </section>
@@ -309,7 +314,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
     </div>
     <div class="box w rv" style="--i:1">
       <h2>Свяжитесь с нами</h2>
-      <div class="m"><div><b>Назир</b><a class="tel" href="tel:+79187441441">+7 (918) 744-14-41</a></div><div class="acts"><a class="ic" href="tel:+79187441441" aria-label="Позвонить Назиру"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8.44,8.44,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></svg></a><a class="ic" href="https://wa.me/79283120201" target="_blank" rel="noopener" aria-label="WhatsApp Назира"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M187.58,144.84l-32-16a8,8,0,0,0-8,.5l-14.69,9.8a40.55,40.55,0,0,1-16-16l9.8-14.69a8,8,0,0,0,.5-8l-16-32A8,8,0,0,0,104,64a40,40,0,0,0-40,40,88.1,88.1,0,0,0,88,88,40,40,0,0,0,40-40A8,8,0,0,0,187.58,144.84ZM152,176a72.08,72.08,0,0,1-72-72A24,24,0,0,1,99.29,80.46l11.48,23L101,118a8,8,0,0,0-.73,7.51,56.47,56.47,0,0,0,30.15,30.15A8,8,0,0,0,138,155l14.61-9.74,23,11.48A24,24,0,0,1,152,176ZM128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></svg></a></div></div>
+      <div class="m"><div><b>Назир</b><a class="tel" href="tel:+79187441441">+7 (918) 744-14-41</a></div><div class="acts"><a class="ic" href="tel:+79187441441" aria-label="Позвонить Назиру"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8.44,8.44,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></svg></a></div></div>
       <div class="m"><div><b>Склад в Махачкале</b><a class="tel" href="tel:+79668889299">+7 (966) 888-92-99</a></div><div class="acts"><a class="ic" href="tel:+79668889299" aria-label="Позвонить на склад в Махачкале"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8.44,8.44,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></svg></a><a class="ic" href="https://wa.me/79668889299" target="_blank" rel="noopener" aria-label="WhatsApp склада в Махачкале"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M187.58,144.84l-32-16a8,8,0,0,0-8,.5l-14.69,9.8a40.55,40.55,0,0,1-16-16l9.8-14.69a8,8,0,0,0,.5-8l-16-32A8,8,0,0,0,104,64a40,40,0,0,0-40,40,88.1,88.1,0,0,0,88,88,40,40,0,0,0,40-40A8,8,0,0,0,187.58,144.84ZM152,176a72.08,72.08,0,0,1-72-72A24,24,0,0,1,99.29,80.46l11.48,23L101,118a8,8,0,0,0-.73,7.51,56.47,56.47,0,0,0,30.15,30.15A8,8,0,0,0,138,155l14.61-9.74,23,11.48A24,24,0,0,1,152,176ZM128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></svg></a></div></div>
       <p class="mail"><svg class="ph" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM203.43,64,128,133.15,52.57,64ZM216,192H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L216,74.19V192Z"/></svg><a href="mailto:ets-tah@list.ru">ets-tah@list.ru</a></p>
     </div>
@@ -318,7 +323,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 
 <footer class="foot">
   <div class="wrap">
-    <div><a class="brand" href="#main"><img src="media/img/logo-dark.png" alt="ЕТС ТоргАгроХим" width="1200" height="300" loading="lazy"></a><p>Удобрения, защита растений, биопрепараты и субстраты для юга России. Питаем. Защищаем. Растим.</p></div>
+    <div><a class="brand" href="#main"><img src="media/img/logo-full.png" alt="ЕТС ТоргАгроХим. Питаем. Защищаем. Ростим." width="640" height="507" loading="lazy"></a><p>Удобрения, защита растений, биопрепараты и субстраты для юга России. Питаем. Защищаем. Ростим.</p></div>
     <div><h4>Компания</h4><ul><li><a href="#about">О компании</a></li><li><a href="#directions">Продукция</a></li><li><a href="#catalog">Каталог</a></li></ul></div>
     <div><h4>Связь</h4><ul><li><a href="tel:+79187441441">+7 (918) 744-14-41</a></li><li><a href="tel:+79668889299">+7 (966) 888-92-99</a></li><li><a href="mailto:ets-tah@list.ru">ets-tah@list.ru</a></li></ul></div>
     <div class="copy"><span>© 2026 ЕТС «ТоргАгроХим»</span><span>Цена и наличие по запросу</span></div>
