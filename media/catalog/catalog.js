@@ -138,11 +138,12 @@
   var dlg = document.createElement('dialog'); dlg.className = 'tahc-dlg'; (root.closest('section') || root.parentNode).appendChild(dlg);
   dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
 
+  // Подходит ли товар под выбранный раздел: при выбранном подразделе достаточно метки подраздела
+  var inSel = function (p) { return state.sub ? p.groups.indexOf(state.sub) >= 0 : (!state.top || p.groups.indexOf(state.top) >= 0); };
   var filtered = function () {
     var q = state.q.trim().toLowerCase();
     return D.items.filter(function (p) {
-      if (state.top && p.groups.indexOf(state.top) < 0) return false;
-      if (state.sub && p.groups.indexOf(state.sub) < 0) return false;
+      if (!inSel(p)) return false;
       if (state.partner && p.partnerId !== state.partner) return false;
       if (q) { var hay = (p.name + ' ' + (p.brand || '') + ' ' + (p.category || '') + ' ' + (p.composition || '') + ' ' + (p.summary || '') + ' ' + (p.use || '')).toLowerCase(); if (hay.indexOf(q) < 0) return false; }
       return true;
@@ -207,7 +208,13 @@
     else if (t.hasAttribute('data-id')) { open(t.getAttribute('data-id')); }
   });
   var timer; $('#tc-q').addEventListener('input', function (e) { clearTimeout(timer); timer = setTimeout(function () { state.q = e.target.value; state.shown = PAGE; render(); }, 180); });
-  $('#tc-p').addEventListener('change', function (e) { state.partner = e.target.value; state.shown = PAGE; render(); });
+  // Список «Производитель»: если у выбранного производителя нет товаров в открытом разделе,
+  // раздел сбрасываем и показываем всю его продукцию, а не пустой список
+  $('#tc-p').addEventListener('change', function (e) {
+    state.partner = e.target.value; state.shown = PAGE;
+    if (state.partner && (state.top || state.sub) && !D.items.some(function (p) { return p.partnerId === state.partner && inSel(p); })) { state.top = ''; state.sub = ''; }
+    render();
+  });
 
   // Карточка партнёра: вся его продукция без других фильтров, прокрутка к списку
   var showPartner = function (id) {
@@ -223,7 +230,10 @@
     if (pm && pCount[pm[1]]) { showPartner(pm[1]); return; }
     var m = /^#catalog-([a-z-]+)$/.exec(location.hash); if (!m) return;
     var g = D.groups.filter(function (x) { return x.id === m[1]; })[0]; if (!g) return;
-    state.top = g.parent || g.id; state.sub = g.parent ? g.id : ''; state.shown = PAGE; render();
+    state.top = g.parent || g.id; state.sub = g.parent ? g.id : ''; state.shown = PAGE;
+    // Если у выбранного производителя нет товаров в этом разделе, производителя сбрасываем: человек нажал на раздел
+    if (state.partner && !D.items.some(function (p) { return p.partnerId === state.partner && inSel(p); })) { state.partner = ''; $('#tc-p').value = ''; }
+    render();
     var sec = document.getElementById('catalog') || root; if (!sec.style.scrollMarginTop) sec.style.scrollMarginTop = '84px'; sec.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   };
   window.addEventListener('hashchange', fromHash);

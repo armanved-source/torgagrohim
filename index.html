@@ -87,7 +87,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 /* Первый экран: живое фото на всю ширину */
 .hero{position:relative;height:min(86svh,820px);min-height:520px;overflow:hidden;isolation:isolate;color:#fff;display:flex;align-items:flex-end}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% 50%;z-index:-2}
-.hero img,.g img,.card img,.pic img{filter:brightness(1.05) saturate(1.14)}
+.g img,.card img,.pic img{filter:brightness(1.05) saturate(1.14)}
 .hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 62% 78% at 0% 100%,rgba(0,0,0,.6),rgba(0,0,0,.28) 55%,rgba(0,0,0,0) 100%)}
 .hero .wrap{padding-bottom:56px;text-shadow:0 1px 3px rgba(0,0,0,.55),0 2px 16px rgba(0,0,0,.6)}
 @media (max-width:700px){.hero::before{background:linear-gradient(0deg,rgba(0,0,0,.7),rgba(0,0,0,.5) 34%,rgba(0,0,0,0) 60%)}}
@@ -115,13 +115,14 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 .split:hover .pic img{transform:scale(1.03)}
 .split .txt{background:var(--white);display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,5vw,80px)}
 .split .txt h2{margin-bottom:12px}
+.split .txt .mark{align-self:flex-start;width:auto;height:clamp(168px,16vw,232px);margin:0 0 30px}
 .split .txt p{max-width:46ch;color:#3E3E3A}
 .split .txt .small{font-size:13px;color:var(--muted);margin-top:22px;line-height:1.7}
 .split ol{list-style:none;margin:22px 0 26px;display:grid;gap:10px;counter-reset:n;font-size:14px}
 .split ol li{display:flex;gap:16px;counter-increment:n}
 .split ol li::before{content:counter(n);color:var(--red);font-weight:600;min-width:12px}
 .split.rev .pic{order:2}
-@media (max-width:900px){.split{grid-template-columns:1fr}.split .pic{min-height:320px}.split.rev .pic{order:0}}
+@media (max-width:900px){.split{grid-template-columns:1fr}.split .pic{min-height:320px}.split.rev .pic{order:0}.split .txt .mark{display:none}}
 
 /* Теплицы и открытый грунт */
 .grounds{padding-top:90px}
@@ -184,7 +185,16 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 .contacts h2{margin-bottom:22px}
 .req{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 22px;font-size:14px}
 .req dt{font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.req dd{margin-top:4px}
+.req dd{margin-top:4px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.req .wide{grid-column:1/-1}
+.bank{margin-top:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.bank summary{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 0;font-weight:600;cursor:pointer;list-style:none}
+.bank summary::-webkit-details-marker{display:none}
+.bank summary::after{content:"";flex:none;width:9px;height:9px;margin:0 6px 4px 0;border-right:1.5px solid var(--red);border-bottom:1.5px solid var(--red);transform:rotate(45deg);transition:transform .25s}
+.bank[open] summary::after{transform:rotate(-135deg);margin-bottom:-4px}
+.bank summary:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+.bank .req{padding:4px 0 20px}
+@media (prefers-reduced-motion:reduce){.bank summary::after{transition:none}}
 .m{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}  /* без переноса: кнопки справа, длинное имя («Склад в Махачкале») переносится само */
 .m:first-of-type{padding-top:0}
 .m b{display:block;font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.2}
@@ -216,6 +226,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 .js.ready .hero .st{opacity:1;transform:none}
 .js .rv{opacity:0;transform:translateY(18px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--i,0)*90ms)}
 .js .rv.in{opacity:1;transform:none}
+@media print{.js .rv{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.split .pic img,.card img,.g img,.press a img,.ul,.pill,.ic{transition:none}.split:hover .pic img,.card:hover img,.g:hover img{transform:none}}
 </style>
 </head>
@@ -232,7 +243,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 
 <main id="main">
   <section class="hero">
-    <img src="media/img/unsplash/light-hero-new.jpg" alt="Ряды томатов в теплице" width="2000" height="1333" fetchpriority="high">
+    <img src="media/img/unsplash/light-hero-red3.jpg" alt="Ряды томатов в теплице" width="1672" height="941" fetchpriority="high">
     <div class="wrap">
       <h1 class="st">Питаем. Защищаем. Ростим.</h1>
       <p class="st" style="--i:1">Удобрения, защита растений, биопрепараты и субстраты для хозяйств Дагестана и Ставропольского края.</p>
@@ -247,6 +258,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
   <section class="wrap split rv" id="about">
     <div class="pic"><img src="media/img/unsplash/light-greenhouse-row.jpg" alt="Ряд томатов в промышленной теплице" loading="lazy" width="2000" height="1333"></div>
     <div class="txt">
+      <img class="mark" src="media/img/logo-full.png" alt="" width="640" height="507" loading="lazy">
       <h2>Всё, что нужно растению,&nbsp;— в одном месте</h2>
       <p>Поставляем удобрения, средства защиты, биопрепараты и субстраты тепличным хозяйствам, овощеводам, садам и виноградникам юга России. Работаем с российскими и зарубежными производителями, мы дилер BashInkom по Ставропольскому краю.</p>
       <p class="small">Махачкала · Дагестанские Огни · Александровское<br>Цена и наличие — по запросу</p>
@@ -310,7 +322,20 @@ h2{font-size:clamp(28px,2.6vw,36px)}
   <section class="contacts" id="contacts" style="margin-top:70px">
     <div class="box s rv">
       <h2>ЕТС «ТоргАгроХим»</h2>
-      <p class="req-note">Реквизиты для договора и счёта отправим по запросу.</p>
+      <dl class="req">
+        <div class="wide"><dt>Продавец</dt><dd>ИП Гафарова Раисат Рамазановна</dd></div>
+        <div><dt>ИНН</dt><dd>260102144855</dd></div>
+        <div><dt>ОГРНИП</dt><dd>314265102700565</dd></div>
+      </dl>
+      <details class="bank">
+        <summary>Банковские реквизиты</summary>
+        <dl class="req">
+          <div class="wide"><dt>Банк</dt><dd>Ставропольское отделение № 5230 ПАО Сбербанк</dd></div>
+          <div><dt>Расчётный счёт</dt><dd>40802810360100028661</dd></div>
+          <div><dt>Корр. счёт</dt><dd>30101810907020000615</dd></div>
+          <div><dt>БИК</dt><dd>040702615</dd></div>
+        </dl>
+      </details>
     </div>
     <div class="box w rv" style="--i:1">
       <h2>Свяжитесь с нами</h2>
@@ -326,7 +351,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
     <div><a class="brand" href="#main"><img src="media/img/logo-full.png" alt="ЕТС ТоргАгроХим. Питаем. Защищаем. Ростим." width="640" height="507" loading="lazy"></a><p>Удобрения, защита растений, биопрепараты и субстраты для юга России. Питаем. Защищаем. Ростим.</p></div>
     <div><h4>Компания</h4><ul><li><a href="#about">О компании</a></li><li><a href="#directions">Продукция</a></li><li><a href="#catalog">Каталог</a></li></ul></div>
     <div><h4>Связь</h4><ul><li><a href="tel:+79187441441">+7 (918) 744-14-41</a></li><li><a href="tel:+79668889299">+7 (966) 888-92-99</a></li><li><a href="mailto:ets-tah@list.ru">ets-tah@list.ru</a></li></ul></div>
-    <div class="copy"><span>© 2026 ЕТС «ТоргАгроХим»</span><span>Цена и наличие по запросу</span></div>
+    <div class="copy"><span>© 2026 ЕТС «ТоргАгроХим» · ИП Гафарова Р. Р. · ИНН 260102144855 · ОГРНИП 314265102700565</span><span>Цена и наличие по запросу</span></div>
   </div>
 </footer>
 
@@ -337,6 +362,7 @@ h2{font-size:clamp(28px,2.6vw,36px)}
   var t=document.getElementById('top'), b=t.querySelector('.burger');
   b.addEventListener('click',function(){var o=t.classList.toggle('open');b.setAttribute('aria-expanded',o)});
   t.querySelectorAll('nav a').forEach(function(a){a.addEventListener('click',function(){t.classList.remove('open');b.setAttribute('aria-expanded','false')})});
+  addEventListener('beforeprint',function(){var d=document.querySelector('details.bank');if(d)d.open=true});
   if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))return;
   var root=document.documentElement;root.classList.add('js');
   requestAnimationFrame(function(){requestAnimationFrame(function(){root.classList.add('ready')})});
