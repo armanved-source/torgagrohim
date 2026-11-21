@@ -95,6 +95,13 @@ h2{font-size:clamp(28px,2.6vw,36px)}
 .hero p{max-width:40ch;margin:14px 0 20px;font-size:15.5px;color:#F2F2EE}
 .hero .ul{color:#fff;background-image:linear-gradient(#fff,#fff)}
 .hero .ul:hover{color:#fff;background-size:100% 2px}
+@media (max-width:700px){
+  .hero{height:auto;min-height:clamp(380px,calc(100svh - var(--hd) - 96px),720px)}
+  .hero .wrap{padding-block:36px 32px}
+  .hero .ul{min-height:48px;padding:0 24px;border-radius:999px;background:#fff;color:var(--red-d);text-shadow:none}
+  .hero .ul:hover{color:var(--wine)}
+  .hero .ul:focus-visible{outline:3px solid var(--ink);outline-offset:3px;box-shadow:0 0 0 6px #fff}
+}
 
 /* Производители — как полоса прессы */
 .press{border-bottom:1px solid var(--line);overflow:hidden}

@@ -3,7 +3,7 @@
    Сверху блок «Партнёры»: карточка производителя открывает всю его продукцию (или ссылка #partner-<id>).
    Подключение: <div class="tahc" id="tahc"></div> + data.js + этот файл.
    Внешний вид задаётся CSS-переменными варианта (--c-bg, --c-card, --c-text, --c-muted, --c-line,
-   --c-acc, --c-acc-ink, --c-radius, --c-head). Фильтр из ссылки: #catalog-<id группы>. */
+   --c-acc, --c-acc-ink, --c-radius, --c-head). Фильтр из ссылки: #catalog-<id группы>. Товар: #product-<id>. */
 (function () {
   var D = window.TAH_CATALOG; var root = document.getElementById('tahc');
   if (!D || !root) return;
@@ -69,6 +69,8 @@
   '.tahc-dlg .note{font-size:12.5px;color:var(--c-muted,#5d6a55)}' +
   '.tahc-dlg{position:fixed;inset:0;margin:auto}.tahc-dlg .x{position:absolute;z-index:2;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:1px solid var(--c-line,#dcdcd2);background:var(--c-card,#fff);color:inherit;font-size:22px;line-height:1;cursor:pointer}' +
   '.tahc-dlg .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}' +
+  '.tahc-dlg .share-status{margin:0}.tahc-dlg .share-status:empty{position:absolute}' +
+  '.tahc-dlg .share-link{width:100%;border:1px solid var(--c-line,#dcdcd2);border-radius:6px;padding:8px;color:inherit;background:var(--c-card,#fff);font:inherit}' +
   '.tahc .tc-partners{margin:0 0 30px}' +
   '.tahc .tc-ph{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:14px}' +
   '.tahc .tc-ph h3{font-family:var(--c-head,inherit);font-size:21px;font-weight:600;margin:0}' +
@@ -136,7 +138,29 @@
   var grid = $('.tc-grid'), cnt = $('.tc-count'), more = $('.tc-more'), subBox = $('.tc-sub');
 
   var dlg = document.createElement('dialog'); dlg.className = 'tahc-dlg'; (root.closest('section') || root.parentNode).appendChild(dlg);
-  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  dlg.setAttribute('aria-labelledby', 'tahc-product-title');
+  var productId = '', catalogHash = '', productOpener;
+  var productHash = function (id) { return '#product-' + encodeURIComponent(id); };
+  var closeDialog = function () { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); };
+  var closeProduct = function () {
+    if (!dlg.hasAttribute('open')) return;
+    closeDialog();
+    if (history.state && history.state.tahcProduct === productId) {
+      history.back();
+      return;
+    }
+    var toCatalog = !catalogHash;
+    history.replaceState(history.state, '', catalogHash || '#catalog');
+    fromHash();
+    if (toCatalog) {
+      var section = document.getElementById('catalog') || root;
+      if (!section.hasAttribute('tabindex')) section.setAttribute('tabindex', '-1');
+      section.focus({ preventScroll: true });
+      section.scrollIntoView();
+    }
+  };
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) closeProduct(); });
+  dlg.addEventListener('cancel', function (e) { e.preventDefault(); closeProduct(); });
 
   // Подходит ли товар под выбранный раздел: при выбранном подразделе достаточно метки подраздела
   var inSel = function (p) { return state.sub ? p.groups.indexOf(state.sub) >= 0 : (!state.top || p.groups.indexOf(state.top) >= 0); };
@@ -182,18 +206,49 @@
     subBox.innerHTML = subs.length ? '<button class="tc-chip" type="button" data-sub="" aria-pressed="' + (!state.sub) + '">Все в группе</button>' + subs.map(function (g) { return '<button class="tc-chip" type="button" data-sub="' + g.id + '" aria-pressed="' + (state.sub === g.id) + '">' + esc(g.name) + '<small>' + nIn(g.id) + '</small></button>'; }).join('') : '';
   };
 
-  var open = function (id) {
-    var p = D.items.filter(function (x) { return x.id === id; })[0]; if (!p) return;
+  var shareProduct = async function (p) {
+    var local = !/^https?:$/.test(location.protocol) || /(^|\.)localhost$|^127\.|^\[::1\]$/.test(location.hostname);
+    var base = local ? 'https://armanved-source.github.io/torgagrohim/' : location.origin + location.pathname;
+    var url = base + productHash(p.id);
+    var status = dlg.querySelector('.share-status'), link = dlg.querySelector('.share-link');
+    status.textContent = '';
+    link.hidden = true;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: p.name, url: url });
+        return;
+      } catch (error) {
+        if (error.name === 'AbortError') return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      status.textContent = 'Ссылка скопирована.';
+    } catch (error) {
+      status.textContent = 'Скопируйте ссылку на товар вручную.';
+      link.value = url;
+      link.hidden = false;
+      // Пока открывалось системное меню, человек мог закрыть или сменить карточку.
+      if (dlg.hasAttribute('open') && dlg.contains(link)) { link.focus(); link.select(); }
+    }
+  };
+
+  var open = function (p) {
     var row = function (k, v) { return v ? '<dt>' + k + '</dt><dd>' + esc(Array.isArray(v) ? v.join(', ') : v) + '</dd>' : ''; };
     dlg.innerHTML = '<button class="x" type="button" aria-label="Закрыть" autofocus>×</button><div class="dl"><div class="dl-pic"><img src="' + src(p) + '" alt="' + esc(p.name) + '"></div><div class="dl-txt">' +
-      '<span class="tc-brand" style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c-muted,#5d6a55)">' + esc(nm(p.brand || '')) + '</span><h3>' + esc(p.name) + '</h3>' +
+      '<span class="tc-brand" style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c-muted,#5d6a55)">' + esc(nm(p.brand || '')) + '</span><h3 id="tahc-product-title">' + esc(p.name) + '</h3>' +
       (p.description ? '<p>' + esc(p.description) + '</p>' : (p.summary ? '<p>' + esc(p.summary) + '</p>' : '')) +
       '<dl>' + row('Категория', p.category) + row('Состав', p.composition) + row('Форма', p.form) + row('Фасовка', p.packaging) + row('Культуры', p.crops) + row('Применение', p.use) + '</dl>' +
       '<p class="note">Характеристики, фасовку и наличие уточнит менеджер. Регламент применения проверяйте по этикетке поставляемой продукции.</p>' +
-      '<div class="acts"><a class="tc-btn wa" style="flex:none;padding:0 18px" href="' + waLink(p) + '" target="_blank" rel="noopener">Цена в WhatsApp</a><a class="tc-btn" style="flex:none;padding:0 18px" href="tel:' + TEL + '">Позвонить</a></div>' +
+      '<div class="acts"><a class="tc-btn wa" style="flex:none;padding:0 18px" href="' + waLink(p) + '" target="_blank" rel="noopener">Цена в WhatsApp</a><a class="tc-btn" style="flex:none;padding:0 18px" href="tel:' + TEL + '">Позвонить</a><button class="tc-btn" type="button" data-share>Поделиться</button></div>' +
+      '<p class="note share-status" role="status"></p><input class="share-link" aria-label="Ссылка на товар" readonly hidden>' +
       '</div></div>';
-    dlg.querySelector('.x').addEventListener('click', function () { dlg.close(); });
-    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    dlg.querySelector('.x').addEventListener('click', closeProduct);
+    dlg.querySelector('[data-share]').addEventListener('click', function () { shareProduct(p); });
+    if (dlg.hasAttribute('open')) dlg.querySelector('.x').focus();
+    else if (dlg.showModal) dlg.showModal();
+    else dlg.setAttribute('open', '');
   };
 
   root.addEventListener('click', function (e) {
@@ -205,7 +260,12 @@
     else if (t.hasAttribute('data-all')) { state.top = ''; state.sub = ''; state.partner = ''; $('#tc-p').value = ''; state.shown = PAGE; render(); }
     else if (t.classList.contains('tc-reset')) { state = { top: '', sub: '', partner: '', q: '', shown: PAGE }; $('#tc-q').value = ''; $('#tc-p').value = ''; render(); }
     else if (t.parentNode === more) { state.shown += PAGE; render(); }
-    else if (t.hasAttribute('data-id')) { open(t.getAttribute('data-id')); }
+    else if (t.hasAttribute('data-id')) {
+      var id = t.getAttribute('data-id');
+      productOpener = t;
+      history.pushState({ tahcProduct: id }, '', productHash(id));
+      fromHash();
+    }
   });
   var timer; $('#tc-q').addEventListener('input', function (e) { clearTimeout(timer); timer = setTimeout(function () { state.q = e.target.value; state.shown = PAGE; render(); }, 180); });
   // Список «Производитель»: если у выбранного производителя нет товаров в открытом разделе,
@@ -224,11 +284,33 @@
     bar.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   };
 
-  // Ссылки вида #catalog-<группа> с карточек направлений открывают каталог с фильтром, #partner-<id> — продукцию партнёра
-  var fromHash = function () {
-    var pm = /^#partner-([a-z0-9-]+)$/.exec(location.hash);
+  var fromHash = function (applyFilter) {
+    var hash = location.hash;
+    if (hash.indexOf('#product-') === 0) {
+      var p = D.items.find(function (x) { return productHash(x.id) === hash; });
+      if (p) {
+        if (productId !== p.id || !dlg.hasAttribute('open')) {
+          if (!productId && !productOpener && root.contains(document.activeElement)) productOpener = document.activeElement;
+          productId = p.id;
+          open(p);
+        }
+        return;
+      }
+    }
+    if (productId) {
+      productId = '';
+      closeDialog();
+      if (productOpener && root.contains(productOpener)) productOpener.focus({ preventScroll: true });
+      productOpener = null;
+      // Возврат к каталогу сохраняет поиск, выбранные фильтры и раскрытые позиции.
+      if (!applyFilter && hash === catalogHash) return;
+    }
+    catalogHash = hash;
+
+    // Ссылки с карточек направлений и партнёров открывают каталог с фильтром.
+    var pm = /^#partner-([a-z0-9-]+)$/.exec(hash);
     if (pm && pCount[pm[1]]) { showPartner(pm[1]); return; }
-    var m = /^#catalog-([a-z-]+)$/.exec(location.hash); if (!m) return;
+    var m = /^#catalog-([a-z-]+)$/.exec(hash); if (!m) return;
     var g = D.groups.filter(function (x) { return x.id === m[1]; })[0]; if (!g) return;
     state.top = g.parent || g.id; state.sub = g.parent ? g.id : ''; state.shown = PAGE;
     // Если у выбранного производителя нет товаров в этом разделе, производителя сбрасываем: человек нажал на раздел
@@ -236,7 +318,7 @@
     render();
     var sec = document.getElementById('catalog') || root; if (!sec.style.scrollMarginTop) sec.style.scrollMarginTop = '84px'; sec.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   };
-  window.addEventListener('hashchange', fromHash);
+  window.addEventListener('hashchange', function () { fromHash(); });
   // Плитки направлений и логотипы партнёров на странице: открываем каталог на каждое нажатие,
   // а не только при смене адреса (повторное нажатие той же плитки hashchange не вызывает)
   document.addEventListener('click', function (e) {
@@ -244,7 +326,7 @@
     if (!a || root.contains(a)) return;
     e.preventDefault();
     if (history.replaceState) history.replaceState(null, '', a.getAttribute('href')); else location.hash = a.getAttribute('href');
-    fromHash();
+    fromHash(true);
   });
   // iOS Safari включает :active (увеличение логотипа при нажатии) только при наличии обработчика touchstart
   document.addEventListener('touchstart', function () {}, { passive: true });
