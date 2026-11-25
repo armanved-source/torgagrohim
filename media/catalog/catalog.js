@@ -1,5 +1,7 @@
 /* Каталог ТоргАгроХим — общий блок для всех вариантов сайта.
-   Данные: window.TAH_CATALOG (media/catalog/data.js: 481 позиция из черновика клиента + Фертика 19.10.2026).
+   Данные: window.TAH_CATALOG (media/catalog/data.js: черновик клиента, Фертика, Уралхим 25.11.2026).
+   Разделы до трёх уровней: направление → раздел → подраздел (например, Удобрения → Гранулированные → Азотные).
+   В выбранном разделе под фильтрами — производители этого раздела: нажатие показывает линейку производителя в разделе.
    Сверху блок «Партнёры»: карточка производителя открывает всю его продукцию (или ссылка #partner-<id>).
    Подключение: <div class="tahc" id="tahc"></div> + data.js + этот файл.
    Внешний вид задаётся CSS-переменными варианта (--c-bg, --c-card, --c-text, --c-muted, --c-line,
@@ -12,7 +14,7 @@
   var IMG = window.TAH_IMG || null; // в самодостаточных файлах картинки встроены
   var imgDir = root.getAttribute('data-img') || '../media/catalog/img/';
   var PAGE = 12;
-  var LOGO = { bashinkom: 'bashinkom.png', eurochem: 'eurochem.svg', polyfeed: 'polyfeed.svg', biogrow: 'biogrow.png', bui: 'bui.png', acron: 'acron.png', daymsa: 'daymsa.png', pharmbiomed: 'pharmbiomed.png', agrosintez: 'agrosintez.png', nestm: 'nestm.png', mcfp: 'mcfp.png', biolchim: 'biolchim.png', ikar: 'ikar.svg', himagromarketing: 'himagromarketing.png', fertika: 'fertika.png', agrohimsintez: 'agrohimsintez.png' };
+  var LOGO = { bashinkom: 'bashinkom.png', uralchem: 'uralchem.png', eurochem: 'eurochem.svg', polyfeed: 'polyfeed.svg', biogrow: 'biogrow.png', bui: 'bui.png', acron: 'acron.png', daymsa: 'daymsa.png', pharmbiomed: 'pharmbiomed.png', agrosintez: 'agrosintez.png', nestm: 'nestm.png', mcfp: 'mcfp.png', biolchim: 'biolchim.png', ikar: 'ikar.svg', himagromarketing: 'himagromarketing.png', fertika: 'fertika.png', agrohimsintez: 'agrohimsintez.png' };
   var logoDir = root.getAttribute('data-logos') || '../media/partners/';
   var logoSrc = function (id) { var f = LOGO[id]; if (!f) return ''; return (window.TAH_LOGO && window.TAH_LOGO[f]) || logoDir + f; };
 
@@ -32,6 +34,23 @@
   '.tahc .tc-chip[aria-pressed="true"]{background:var(--c-acc,#3c6b2a);border-color:var(--c-acc,#3c6b2a);color:var(--c-acc-ink,#fff)}' +
   '.tahc .tc-chip small{opacity:.7;font-weight:500;margin-left:6px}' +
   '.tahc .tc-sub .tc-chip{min-height:34px;font-size:13px;padding:0 12px}' +
+  '.tahc .tc-types[hidden]{display:none}' +
+  '.tahc .tc-leaf{padding-left:14px;border-left:2px solid var(--c-acc,#3c6b2a);margin-left:2px}' +
+  '.tahc .tc-makers{margin:6px 0 14px;padding:14px 16px 12px;border:1px solid var(--c-line,#dcdcd2);border-radius:var(--r);background:var(--c-card,#fff)}' +
+  '.tahc .tc-makers[hidden]{display:none}' +
+  '.tahc .tc-makers h4{margin:0 0 10px;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--c-muted,#5d6a55)}' +
+  '.tahc .tc-makers h4 b{color:var(--c-text,#1d2a18)}' +
+  '.tahc .tc-mlist{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:thin;scroll-snap-type:x proximity}' +
+  '.tahc .tc-maker{flex:none;scroll-snap-align:start;display:flex;align-items:center;gap:10px;min-height:56px;padding:8px 14px 8px 8px;border-radius:calc(var(--r) + 6px);border:1px solid var(--c-line,#dcdcd2);background:var(--c-card,#fff);color:inherit;font:inherit;cursor:pointer;text-align:left;transition:border-color .2s,box-shadow .2s,transform .25s cubic-bezier(.16,1,.3,1)}' +
+  '.tahc .tc-maker:hover{border-color:var(--c-acc,#3c6b2a)}.tahc .tc-maker:active{transform:scale(.97)}' +
+  '.tahc .tc-maker[aria-pressed="true"]{border-color:var(--c-acc,#3c6b2a);box-shadow:inset 0 0 0 1px var(--c-acc,#3c6b2a)}' +
+  '.tahc .tc-maker .ml{display:grid;place-items:center;width:64px;height:40px;background:#fff;border-radius:calc(var(--r) - 2px);flex:none}' +
+  '.tahc .tc-maker .ml img{max-width:56px;max-height:30px;object-fit:contain}' +
+  '.tahc .tc-maker .ml i{font-style:normal;font-weight:800;font-size:15px}' +
+  '.tahc .tc-maker b{display:block;font-size:14px;font-weight:700;line-height:1.2;white-space:nowrap}' +
+  '.tahc .tc-maker small{display:block;font-size:12.5px;color:var(--c-muted,#5d6a55)}' +
+  '.tahc .tc-maker.all{padding:8px 16px}' +
+  '@media (prefers-reduced-motion:reduce){.tahc .tc-maker{transition:none}.tahc .tc-maker:active{transform:none}}' +
   '.tahc .tc-types{display:flex;align-items:center;gap:10px;margin:2px 0 6px}.tahc .tc-types>span{flex:none;font-size:13px;font-weight:700;color:var(--c-muted,#5d6a55)}.tahc .tc-types .tc-chips{padding-bottom:4px}' +
   '.tahc .tc-count{font-size:13.5px;color:var(--c-muted,#5d6a55);margin:4px 0 16px}' +
   '.tahc .tc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}' +
@@ -103,7 +122,12 @@
   var gName = {}; D.groups.forEach(function (g) { gName[g.id] = g.name; });
   var TYPES = ['water-soluble', 'granular', 'liquid', 'micronutrients', 'fertigation', 'fungicides', 'insecticides', 'herbicides', 'acaricides', 'seed-treatments', 'adjuvants', 'bio', 'stimulants', 'substrates'];
   var count = function (id) { return D.items.filter(function (p) { return p.groups.indexOf(id) >= 0; }).length; };
-  var state = { top: '', sub: '', partner: '', q: '', shown: PAGE };
+  var state = { top: '', sub: '', leaf: '', partner: '', q: '', shown: PAGE };
+  var gById = {}; D.groups.forEach(function (g) { gById[g.id] = g; });
+  // Цепочка раздела: [направление, раздел, подраздел]
+  var chain = function (id) { var c = []; var g = gById[id]; while (g) { c.unshift(g.id); g = gById[g.parent]; } return c; };
+  var selectGroup = function (id) { var c = chain(id); state.top = c[0] || ''; state.sub = c[1] || ''; state.leaf = c[2] || ''; };
+  var deepest = function () { return state.leaf || state.sub || state.top; };
   var src = function (p) { return IMG && IMG[p.img] ? IMG[p.img] : imgDir + p.img; };
   var waLink = function (p) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Здравствуйте! Интересует: ' + p.name + (p.brand ? ' (' + nm(p.brand) + ')' : '') + '. Подскажите цену и наличие.'); };
 
@@ -129,13 +153,15 @@
       tops.map(function (g) { return '<button class="tc-chip" type="button" data-top="' + g.id + '" aria-pressed="false">' + esc(g.name) + '<small>' + count(g.id) + '</small></button>'; }).join('') +
     '</div>' +
     '<div class="tc-chips tc-sub" role="group" aria-label="Подгруппа" hidden></div>' +
+    '<div class="tc-chips tc-sub tc-leaf" role="group" aria-label="Вид внутри раздела" hidden></div>' +
     '<div class="tc-types"><span>По виду:</span><div class="tc-chips" role="group" aria-label="Вид продукции">' + TYPES.filter(function (id) { return count(id); }).map(function (id) { return '<button class="tc-chip" type="button" data-type="' + id + '" aria-pressed="false">' + esc(gName[id]) + '<small>' + count(id) + '</small></button>'; }).join('') + '</div></div>' +
+    '<div class="tc-makers" hidden><h4></h4><div class="tc-mlist" role="group" aria-label="Производители в разделе"></div></div>' +
     '<p class="tc-count" aria-live="polite"></p>' +
     '<div class="tc-grid"></div>' +
     '<div class="tc-more"><button type="button">Показать ещё</button></div>';
 
   var $ = function (s) { return root.querySelector(s); };
-  var grid = $('.tc-grid'), cnt = $('.tc-count'), more = $('.tc-more'), subBox = $('.tc-sub');
+  var grid = $('.tc-grid'), cnt = $('.tc-count'), more = $('.tc-more'), subBox = $('.tc-sub'), leafBox = $('.tc-leaf'), makers = $('.tc-makers');
 
   var dlg = document.createElement('dialog'); dlg.className = 'tahc-dlg'; (root.closest('section') || root.parentNode).appendChild(dlg);
   dlg.setAttribute('aria-labelledby', 'tahc-product-title');
@@ -163,7 +189,7 @@
   dlg.addEventListener('cancel', function (e) { e.preventDefault(); closeProduct(); });
 
   // Подходит ли товар под выбранный раздел: при выбранном подразделе достаточно метки подраздела
-  var inSel = function (p) { return state.sub ? p.groups.indexOf(state.sub) >= 0 : (!state.top || p.groups.indexOf(state.top) >= 0); };
+  var inSel = function (p) { var g = deepest(); return !g || p.groups.indexOf(g) >= 0; };
   var filtered = function () {
     var q = state.q.trim().toLowerCase();
     return D.items.filter(function (p) {
@@ -186,7 +212,7 @@
   var render = function () {
     var list = filtered();
     var allHits = 0;
-    if (state.q.trim() && (state.top || state.sub || state.partner)) { var keep = state; state = { top: '', sub: '', partner: '', q: keep.q, shown: PAGE }; allHits = filtered().length; state = keep; }
+    if (state.q.trim() && (state.top || state.partner)) { var keep = state; state = { top: '', sub: '', leaf: '', partner: '', q: keep.q, shown: PAGE }; allHits = filtered().length; state = keep; }
     var more2 = allHits - list.length;
     cnt.innerHTML = list.length ? 'Найдено позиций: ' + list.length + '. Цена и наличие — у менеджера.' +
       (more2 > 0 ? ' <button class="tc-else" type="button" data-all>Ещё ' + more2 + ' в других разделах — искать везде</button>' : '') : '';
@@ -199,11 +225,34 @@
     // счётчики видов и направлений — в пределах выбранного производителя; пустые прячем
     var inP = state.partner ? D.items.filter(function (p) { return p.partnerId === state.partner; }) : D.items;
     root.querySelectorAll('[data-type],.tc-chips:not(.tc-sub) [data-top]:not([data-top=""])').forEach(function (b) { var id = b.getAttribute('data-type') || b.getAttribute('data-top'); var n = inP.filter(function (p) { return p.groups.indexOf(id) >= 0; }).length; b.querySelector('small').textContent = n; b.hidden = !n; });
-    root.querySelectorAll('[data-type]').forEach(function (b) { var id = b.getAttribute('data-type'); b.setAttribute('aria-pressed', (state.sub === id || (!state.sub && state.top === id)) ? 'true' : 'false'); });
+    root.querySelectorAll('[data-type]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-type') === deepest() ? 'true' : 'false'); });
     var nIn = function (id) { return inP.filter(function (p) { return p.groups.indexOf(id) >= 0; }).length; };
     var subs = state.top ? subsOf(state.top).filter(function (g) { return nIn(g.id); }) : [];
     subBox.hidden = !subs.length;
     subBox.innerHTML = subs.length ? '<button class="tc-chip" type="button" data-sub="" aria-pressed="' + (!state.sub) + '">Все в группе</button>' + subs.map(function (g) { return '<button class="tc-chip" type="button" data-sub="' + g.id + '" aria-pressed="' + (state.sub === g.id) + '">' + esc(g.name) + '<small>' + nIn(g.id) + '</small></button>'; }).join('') : '';
+    var leaves = state.sub ? subsOf(state.sub).filter(function (g) { return nIn(g.id); }) : [];
+    leafBox.hidden = !leaves.length;
+    leafBox.innerHTML = leaves.length ? '<button class="tc-chip" type="button" data-leaf="" aria-pressed="' + (!state.leaf) + '">Все: ' + esc(gName[state.sub].toLowerCase()) + '</button>' + leaves.map(function (g) { return '<button class="tc-chip" type="button" data-leaf="' + g.id + '" aria-pressed="' + (state.leaf === g.id) + '">' + esc(g.name) + '<small>' + nIn(g.id) + '</small></button>'; }).join('') : '';
+    // «По виду» — быстрый вход с верхнего уровня; внутри направления хватает строк разделов
+    root.querySelector('.tc-types').hidden = !!state.top;
+    renderMakers();
+  };
+
+  // Производители внутри выбранного раздела: нажатие показывает линейку производителя в этом разделе
+  var renderMakers = function () {
+    var g = deepest();
+    if (!g) { makers.hidden = true; return; }
+    var inG = D.items.filter(function (p) { return p.groups.indexOf(g) >= 0; });
+    var n = {}; inG.forEach(function (p) { if (p.partnerId) n[p.partnerId] = (n[p.partnerId] || 0) + 1; });
+    var list = D.partners.filter(function (p) { return n[p.id]; }).sort(function (a, b) { return n[b.id] - n[a.id]; });
+    if (list.length < 2 && !state.partner) { makers.hidden = true; return; }
+    makers.hidden = false;
+    makers.querySelector('h4').innerHTML = 'Производители в разделе <b>«' + esc(gName[g]) + '»</b>';
+    makers.querySelector('.tc-mlist').innerHTML = '<button class="tc-maker all" type="button" data-maker="" aria-pressed="' + (!state.partner) + '"><span><b>Все</b><small>' + pos(inG.length) + '</small></span></button>' +
+      list.map(function (p) {
+        var lg = logoSrc(p.id);
+        return '<button class="tc-maker" type="button" data-maker="' + esc(p.id) + '" aria-pressed="' + (state.partner === p.id) + '"><span class="ml">' + (lg ? '<img src="' + lg + '" alt="" loading="lazy">' : '<i>' + esc(nm(p.name)).slice(0, 2) + '</i>') + '</span><span><b>' + esc(nm(p.name)) + '</b><small>' + pos(n[p.id]) + '</small></span></button>';
+      }).join('');
   };
 
   var shareProduct = async function (p) {
@@ -254,11 +303,13 @@
   root.addEventListener('click', function (e) {
     var t = e.target.closest('button,a'); if (!t || !root.contains(t)) return;
     if (t.hasAttribute('data-partner')) { showPartner(state.partner === t.getAttribute('data-partner') ? '' : t.getAttribute('data-partner')); }
-    else if (t.hasAttribute('data-type')) { var g = D.groups.filter(function (x) { return x.id === t.getAttribute('data-type'); })[0]; var same = (g.parent ? state.sub : state.top) === g.id && (g.parent ? true : !state.sub); state.top = same ? '' : (g.parent || g.id); state.sub = same ? '' : (g.parent ? g.id : ''); state.shown = PAGE; render(); }
-    else if (t.hasAttribute('data-top')) { state.top = t.getAttribute('data-top'); state.sub = ''; state.shown = PAGE; render(); }
-    else if (t.hasAttribute('data-sub')) { state.sub = t.getAttribute('data-sub'); state.shown = PAGE; render(); }
-    else if (t.hasAttribute('data-all')) { state.top = ''; state.sub = ''; state.partner = ''; $('#tc-p').value = ''; state.shown = PAGE; render(); }
-    else if (t.classList.contains('tc-reset')) { state = { top: '', sub: '', partner: '', q: '', shown: PAGE }; $('#tc-q').value = ''; $('#tc-p').value = ''; render(); }
+    else if (t.hasAttribute('data-type')) { var tid = t.getAttribute('data-type'); if (deepest() === tid) selectGroup(''); else selectGroup(tid); keepPartner(); state.shown = PAGE; render(); }
+    else if (t.hasAttribute('data-top')) { state.top = t.getAttribute('data-top'); state.sub = ''; state.leaf = ''; keepPartner(); state.shown = PAGE; render(); }
+    else if (t.hasAttribute('data-sub')) { state.sub = t.getAttribute('data-sub'); state.leaf = ''; keepPartner(); state.shown = PAGE; render(); }
+    else if (t.hasAttribute('data-leaf')) { state.leaf = t.getAttribute('data-leaf'); keepPartner(); state.shown = PAGE; render(); }
+    else if (t.hasAttribute('data-maker')) { state.partner = state.partner === t.getAttribute('data-maker') ? '' : t.getAttribute('data-maker'); $('#tc-p').value = state.partner; state.shown = PAGE; render(); }
+    else if (t.hasAttribute('data-all')) { selectGroup(''); state.partner = ''; $('#tc-p').value = ''; state.shown = PAGE; render(); }
+    else if (t.classList.contains('tc-reset')) { state = { top: '', sub: '', leaf: '', partner: '', q: '', shown: PAGE }; $('#tc-q').value = ''; $('#tc-p').value = ''; render(); }
     else if (t.parentNode === more) { state.shown += PAGE; render(); }
     else if (t.hasAttribute('data-id')) {
       var id = t.getAttribute('data-id');
@@ -267,18 +318,20 @@
       fromHash();
     }
   });
+  // Сменили раздел, а у выбранного производителя в нём ничего нет: показываем всех производителей раздела
+  var keepPartner = function () { if (state.partner && !D.items.some(function (p) { return p.partnerId === state.partner && inSel(p); })) { state.partner = ''; $('#tc-p').value = ''; } };
   var timer; $('#tc-q').addEventListener('input', function (e) { clearTimeout(timer); timer = setTimeout(function () { state.q = e.target.value; state.shown = PAGE; render(); }, 180); });
   // Список «Производитель»: если у выбранного производителя нет товаров в открытом разделе,
   // раздел сбрасываем и показываем всю его продукцию, а не пустой список
   $('#tc-p').addEventListener('change', function (e) {
     state.partner = e.target.value; state.shown = PAGE;
-    if (state.partner && (state.top || state.sub) && !D.items.some(function (p) { return p.partnerId === state.partner && inSel(p); })) { state.top = ''; state.sub = ''; }
+    if (state.partner && state.top && !D.items.some(function (p) { return p.partnerId === state.partner && inSel(p); })) selectGroup('');
     render();
   });
 
   // Карточка партнёра: вся его продукция без других фильтров, прокрутка к списку
   var showPartner = function (id) {
-    state = { top: '', sub: '', partner: id, q: '', shown: PAGE }; $('#tc-q').value = ''; $('#tc-p').value = id; render();
+    state = { top: '', sub: '', leaf: '', partner: id, q: '', shown: PAGE }; $('#tc-q').value = ''; $('#tc-p').value = id; render();
     if (!id) return;
     var bar = $('.tc-bar'); bar.style.scrollMarginTop = '84px';
     bar.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
@@ -312,7 +365,7 @@
     if (pm && pCount[pm[1]]) { showPartner(pm[1]); return; }
     var m = /^#catalog-([a-z-]+)$/.exec(hash); if (!m) return;
     var g = D.groups.filter(function (x) { return x.id === m[1]; })[0]; if (!g) return;
-    state.top = g.parent || g.id; state.sub = g.parent ? g.id : ''; state.shown = PAGE;
+    selectGroup(g.id); state.shown = PAGE;
     // Если у выбранного производителя нет товаров в этом разделе, производителя сбрасываем: человек нажал на раздел
     if (state.partner && !D.items.some(function (p) { return p.partnerId === state.partner && inSel(p); })) { state.partner = ''; $('#tc-p').value = ''; }
     render();
