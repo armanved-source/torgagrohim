@@ -2,7 +2,7 @@
    Данные: window.TAH_CATALOG (media/catalog/data.js: черновик клиента, Фертика, Уралхим 25.11.2026).
    Разделы до трёх уровней: направление → раздел → подраздел (например, Удобрения → Гранулированные → Азотные).
    В выбранном разделе под фильтрами — переключатели производителей этого раздела.
-   Сверху блок «Партнёры»: карточка производителя открывает всю его продукцию (или ссылка #partner-<id>).
+   Под товарами список производителей: карточка производителя открывает всю его продукцию (или ссылка #partner-<id>).
    Подключение: <div class="tahc" id="tahc"></div> + data.js + этот файл.
    Внешний вид задаётся CSS-переменными варианта (--c-bg, --c-card, --c-text, --c-muted, --c-line,
    --c-acc, --c-acc-ink, --c-radius, --c-head). Фильтр из ссылки: #catalog-<id группы>. Товар: #product-<id>. */
@@ -102,7 +102,7 @@
   '.tahc .tc-acts .tc-btn{flex:none}' +
   '.tahc .tc-btn:hover,.tahc-dlg .tc-btn:hover{filter:brightness(1.08)}' +
   '.tahc .tc-more{display:flex;justify-content:center;margin-top:22px}' +
-  '.tahc .tc-more[hidden],.tahc .tc-chip[hidden]{display:none}' +
+  '.tahc [hidden]{display:none}' +
   '.tahc .tc-else{border:0;background:none;padding:4px 0;font:inherit;font-weight:700;color:var(--c-acc,#3c6b2a);text-decoration:underline;text-underline-offset:3px;cursor:pointer}' +
   '.tahc .tc-more button{min-height:50px;padding:0 28px;border-radius:999px;border:1px solid var(--c-acc,#3c6b2a);background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer}' +
   '.tahc .tc-more button:hover{background:var(--c-acc,#3c6b2a);color:var(--c-acc-ink,#fff)}' +
@@ -122,10 +122,10 @@
   '.tahc-dlg .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}' +
   '.tahc-dlg .share-status{margin:0}.tahc-dlg .share-status:empty{position:absolute}' +
   '.tahc-dlg .share-link{width:100%;border:1px solid var(--c-line,#dcdcd2);border-radius:6px;padding:8px;color:inherit;background:var(--c-card,#fff);font:inherit}' +
-  '.tahc .tc-partners{margin:0 0 30px}' +
-  '.tahc .tc-ph{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:14px}' +
-  '.tahc .tc-ph h3{font-family:var(--c-head,inherit);font-size:21px;font-weight:600;margin:0}' +
-  '.tahc .tc-ph p{margin:0;font-size:13.5px;color:var(--c-muted,#5d6a55)}' +
+  '.tahc .tc-bar,.tahc .tc-partners{scroll-margin-top:var(--tc-scroll-margin,84px)}' +
+  '.tahc .tc-partners{margin-top:24px;border-top:1px solid var(--c-line,#dcdcd2)}' +
+  '.tahc .tc-partners summary{padding:14px 0;cursor:pointer;font-family:var(--c-head,inherit);font-size:21px;font-weight:600}' +
+  '.tahc .tc-partners p{margin:0 0 14px;font-size:13.5px;color:var(--c-muted,#5d6a55)}' +
   '.tahc .tc-plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}' +
   '.tahc .tc-pcard{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:112px;padding:14px 16px;text-align:left;border-radius:var(--r);border:1px solid var(--c-line,#dcdcd2);background:var(--c-card,#fff);color:inherit;font:inherit;cursor:pointer;transition:border-color .2s,transform .25s cubic-bezier(.16,1,.3,1)}' +
   '.tahc .tc-pcard:hover{border-color:var(--c-acc,#3c6b2a);transform:translateY(-2px)}' +
@@ -172,31 +172,31 @@
   var groupLabel = function (id) { return GROUP_LABELS[id] || gName[id]; };
   var MARK_TYPE_BY_ID = { 'acron-npk-16-16-16': 'Нитроаммофоска' };
   var MARK_TYPES = [
-    ['Нитроаммофоска', /нитроаммофоск/iu],
-    ['Азофоска', /азофоск/iu],
-    ['Диаммофоска', /диаммофоск/iu],
-    ['Сульфоаммофос', /сульфоаммофос/iu],
-    ['Аммофос', /(?:^|[^а-яё])аммофос/iu],
-    ['Селитра известково-аммиачная', /селитра\s+известково[- ]аммиачная|известково[- ]аммиачная\s+селитра/iu],
-    ['Аммиачная селитра', /аммиачная\s+селитра|селитра\s+аммиачная|аммиачно[- ]нитратное/iu],
-    ['Кальциевая селитра', /кальциевая\s+селитра|селитра\s+кальциевая|нитрат\s+кальция/iu],
-    ['Калиевая селитра', /калиевая\s+селитра|селитра\s+калиевая|нитрат\s+калия/iu],
-    ['Магниевая селитра', /магниевая\s+селитра|селитра\s+магниевая|нитрат\s+магния/iu],
-    ['Аммиак безводный', /аммиак\s+безводный/iu],
-    ['КАС', /(?:^|[^а-яёa-z])кас(?![а-яёa-z])|карбамидно[- ]аммиачная\s+смесь/iu],
-    ['Карбамид', /карбамид|мочевин/iu],
-    ['Сульфат аммония', /сульфат\s+аммония|аммоний\s+сернокислый/iu],
-    ['Сульфат калия', /сульфат\s+калия|калий\s+сернокислый/iu],
-    ['Сульфат магния', /сульфат\s+магния|магний\s+сернокислый/iu],
-    ['Хлористый калий', /хлористый\s+калий|калий\s+хлористый|\bkcl\b/iu],
-    ['Калимагнезия', /калимагнези/iu],
-    ['Монокалийфосфат', /монокалий\s*фосфат/iu],
-    ['Моноаммонийфосфат', /моноаммоний\s*фосфат/iu],
-    ['Азотофосфат', /азотофосфат/iu],
-    ['Сульфонитрат', /сульфонитрат/iu],
-    ['ОМУ', /(?:^|[^а-яёa-z])ому(?![а-яёa-z])|органоминеральн/iu],
-    ['Хелатные микроудобрения', /хелатные\s+микроудобрения|микроудобрения\s+в\s+хелатной\s+форме/iu],
-    ['Гуминовые удобрения', /гуминовые\s+удобрения/iu]
+    ['Нитроаммофоска', /нитроаммофоск/i],
+    ['Азофоска', /азофоск/i],
+    ['Диаммофоска', /диаммофоск/i],
+    ['Сульфоаммофос', /сульфоаммофос/i],
+    ['Аммофос', /(?:^|[^а-яё])аммофос/i],
+    ['Селитра известково-аммиачная', /селитра\s+известково[- ]аммиачная|известково[- ]аммиачная\s+селитра/i],
+    ['Аммиачная селитра', /аммиачная\s+селитра|селитра\s+аммиачная|аммиачно[- ]нитратное/i],
+    ['Кальциевая селитра', /кальциевая\s+селитра|селитра\s+кальциевая|нитрат\s+кальция/i],
+    ['Калиевая селитра', /калиевая\s+селитра|селитра\s+калиевая|нитрат\s+калия/i],
+    ['Магниевая селитра', /магниевая\s+селитра|селитра\s+магниевая|нитрат\s+магния/i],
+    ['Аммиак безводный', /аммиак\s+безводный/i],
+    ['КАС', /(?:^|[^а-яёa-z])кас(?![а-яёa-z])|карбамидно[- ]аммиачная\s+смесь/i],
+    ['Карбамид', /карбамид|мочевин/i],
+    ['Сульфат аммония', /сульфат\s+аммония|аммоний\s+сернокислый/i],
+    ['Сульфат калия', /сульфат\s+калия|калий\s+сернокислый/i],
+    ['Сульфат магния', /сульфат\s+магния|магний\s+сернокислый/i],
+    ['Хлористый калий', /хлористый\s+калий|калий\s+хлористый|\bkcl\b/i],
+    ['Калимагнезия', /калимагнези/i],
+    ['Монокалийфосфат', /монокалий\s*фосфат/i],
+    ['Моноаммонийфосфат', /моноаммоний\s*фосфат/i],
+    ['Азотофосфат', /азотофосфат/i],
+    ['Сульфонитрат', /сульфонитрат/i],
+    ['ОМУ', /(?:^|[^а-яёa-z])ому(?![а-яёa-z])|органоминеральн/i],
+    ['Хелатные микроудобрения', /хелатные\s+микроудобрения|микроудобрения\s+в\s+хелатной\s+форме/i],
+    ['Гуминовые удобрения', /гуминовые\s+удобрения/i]
   ];
   var markType = function (value) {
     return MARK_TYPES.find(function (entry) { return entry[1].test(value); });
@@ -211,7 +211,7 @@
       if (numbers.some(function (n) { return Number(n.replace(',', '.')) > 100; })) continue;
       var prefix = value.slice(0, match.index + match[1].length);
       if (numbers.length === 2 &&
-        (/(?:^|[^\p{L}])(?:PK|РК|NK|NS|NCa|азотно[- ]калийн\p{L}*)\s*$/iu.test(prefix) ||
+        (/(?:^|[^а-яёa-z])(?:PK|РК|NK|NS|NCa|азотно[- ]калийн[а-яёa-z]*)\s*$/i.test(prefix) ||
          (match[3] === '.' && !/\bNPS?\s*$/i.test(prefix)))) continue;
       return (numbers.length === 2 ? 'NP ' : 'NPK ') + numbers.slice(0, 3).join(':');
     }
@@ -223,7 +223,6 @@
     return [p.id, [MARK_TYPE_BY_ID[p.id] || (type && type[0]), formula]];
   }));
   var TYPES = ['water-soluble', 'granular', 'liquid', 'micronutrients', 'fertigation', 'fungicides', 'insecticides', 'herbicides', 'acaricides', 'seed-treatments', 'adjuvants', 'bio', 'stimulants', 'substrates'];
-  var count = function (id) { return D.items.filter(function (p) { return p.groups.indexOf(id) >= 0; }).length; };
   var state = { top: '', sub: '', leaf: '', partners: [], q: '', marks: new Set(), shown: PAGE };
   var gById = {}; D.groups.forEach(function (g) { gById[g.id] = g; });
   // Цепочка раздела: [направление, раздел, подраздел]
@@ -252,14 +251,8 @@
   var singlePartner = function () { return state.partners.length === 1 ? state.partners[0] : ''; };
 
   root.innerHTML =
-    '<div class="tc-partners" id="partners"><div class="tc-ph"><h3>Партнёры</h3><p>Нажмите на производителя: ниже откроется вся его продукция.</p></div>' +
-      '<div class="tc-plist" role="group" aria-label="Производители">' + partners.map(function (p) {
-        var sub = nm(p.name) !== p.subtitle ? p.subtitle : '';
-        var lg = logoSrc(p.id);
-        return '<button class="tc-pcard" type="button" data-partner="' + esc(p.id) + '" aria-pressed="false">' + (lg ? '<span class="lg"><img src="' + lg + '" alt="" loading="lazy"></span>' : '') + '<b>' + esc(nm(p.name)) + '</b>' + (sub ? '<span>' + esc(sub) + '</span>' : '') + '<em>' + pos(pCount[p.id]) + ' →</em></button>';
-      }).join('') + '</div></div>' +
     '<div class="tc-bar">' +
-      '<div class="tc-q"><label for="tc-q">Поиск по названию, составу или задаче</label><input id="tc-q" type="search" placeholder="Например: кальций, фунгицид, Акварин" autocomplete="off"></div>' +
+      '<div class="tc-q"><label for="tc-q">Поиск по названию, производителю, составу или задаче</label><input id="tc-q" type="search" placeholder="Например: кальций, фунгицид, Акварин" autocomplete="off"></div>' +
       '<div><span class="tc-partner-label" id="tc-p-label">Производитель</span><details id="tc-p">' +
         '<summary aria-labelledby="tc-p-label tc-p-value"><span id="tc-p-value">Все производители</span></summary>' +
         '<div class="tc-partner-options" role="group" aria-labelledby="tc-p-label">' +
@@ -269,11 +262,11 @@
     '</div>' +
     '<div class="tc-chips" role="group" aria-label="Направление">' +
       '<button class="tc-chip" type="button" data-top="" aria-pressed="true">Вся продукция<small>' + D.items.length + '</small></button>' +
-      tops.map(function (g) { return '<button class="tc-chip" type="button" data-top="' + g.id + '" aria-pressed="false">' + esc(g.name) + '<small>' + count(g.id) + '</small></button>'; }).join('') +
+      tops.map(function (g) { return '<button class="tc-chip" type="button" data-top="' + g.id + '" aria-pressed="false">' + esc(g.name) + '<small></small></button>'; }).join('') +
     '</div>' +
     '<div class="tc-chips tc-sub" role="group" aria-label="Подгруппа" hidden></div>' +
     '<div class="tc-chips tc-sub tc-leaf" role="group" aria-label="Вид внутри раздела" hidden></div>' +
-    '<div class="tc-types"><span>По виду:</span><div class="tc-chips" role="group" aria-label="Вид продукции">' + TYPES.filter(function (id) { return count(id); }).map(function (id) { return '<button class="tc-chip" type="button" data-type="' + id + '" aria-pressed="false">' + esc(gName[id]) + '<small>' + count(id) + '</small></button>'; }).join('') + '</div></div>' +
+    '<div class="tc-types"><span>По виду:</span><div class="tc-chips" role="group" aria-label="Вид продукции">' + TYPES.filter(function (id) { return gById[id]; }).map(function (id) { return '<button class="tc-chip" type="button" data-type="' + id + '" aria-pressed="false">' + esc(gName[id]) + '<small></small></button>'; }).join('') + '</div></div>' +
     '<div class="tc-makers" hidden><h4></h4><div class="tc-mlist" role="group" aria-label="Производители в разделе"></div></div>' +
     '<div class="tc-layout">' +
       '<button class="tc-btn tc-sidebar-toggle" type="button" aria-controls="tc-sidebar" aria-expanded="false">Каталог и фильтры</button>' +
@@ -289,9 +282,16 @@
         '<div class="tc-grid"></div>' +
         '<div class="tc-more"><button type="button">Показать ещё</button></div>' +
       '</div>' +
-    '</div>';
+    '</div>' +
+    '<details class="tc-partners" id="partners"><summary>Производители</summary><p>Выберите производителя, чтобы посмотреть его товары в каталоге.</p>' +
+      '<div class="tc-plist" role="group" aria-label="Производители">' + partners.map(function (p) {
+        var sub = nm(p.name) !== p.subtitle ? p.subtitle : '';
+        var lg = logoSrc(p.id);
+        return '<button class="tc-pcard" type="button" data-partner="' + esc(p.id) + '" aria-pressed="false">' + (lg ? '<span class="lg"><img src="' + lg + '" alt="" loading="lazy"></span>' : '') + '<b>' + esc(nm(p.name)) + '</b>' + (sub ? '<span>' + esc(sub) + '</span>' : '') + '<em>' + pos(pCount[p.id]) + ' →</em></button>';
+      }).join('') + '</div></details>';
 
   var $ = function (s) { return root.querySelector(s); };
+  var bar = $('.tc-bar'), query = $('#tc-q'), partnerList = $('#partners');
   var grid = $('.tc-grid'), cnt = $('.tc-count'), more = $('.tc-more'), subBox = $('.tc-sub'), leafBox = $('.tc-leaf'), makers = $('.tc-makers');
   var partnerFilter = $('#tc-p'), partnerSummary = partnerFilter.querySelector('summary');
 
@@ -321,16 +321,22 @@
   dlg.addEventListener('cancel', function (e) { e.preventDefault(); closeProduct(); });
 
   var belongsTo = function (p, group, selected) {
-    return (!group || p.groups.indexOf(group) >= 0) && (!selected || !selected.length || selected.indexOf(makerId(p)) >= 0);
+    if (selected && selected.length && selected.indexOf(makerId(p)) < 0) return false;
+    return !group || p.groups.some(function (tag) {
+      return tag === group || chain(tag).indexOf(group) >= 0;
+    });
   };
   var within = function (items, group, selected) {
     return items.filter(function (p) { return belongsTo(p, group, selected); });
   };
+  var count = function (id) { return within(D.items, id).length; };
   var searchedItems = function () {
     var q = state.q.trim().toLowerCase();
     if (!q) return D.items;
     return D.items.filter(function (p) {
-      var hay = [p.name, p.brand, p.category, p.composition, p.summary, p.use].join(' ').toLowerCase();
+      var hay = [
+        p.name, p.brand, nm(p.brand), catalogMakers.get(makerId(p)), p.category, p.composition, p.summary, p.use
+      ].join(' ').toLowerCase();
       return hay.indexOf(q) >= 0;
     });
   };
@@ -409,7 +415,9 @@
     var activeGroup = deepest(), activePartner = singlePartner();
     var node = function (group, partner, label, expandable, children) {
       var current = state.partners.length < 2 && group === activeGroup && partner === activePartner;
-      var n = current ? visibleCount : !group && !partner ? D.items.length : within(searched, group, partner ? [partner] : []).length;
+      var selected = partner ? [partner] : [];
+      if (!partner && group && state.partners.length > 1) selected = makersInGroup(group);
+      var n = current || (!partner && group === activeGroup && state.partners.length > 1) ? visibleCount : !group && !partner ? D.items.length : within(searched, group, selected).length;
       return '<li><button class="tc-node" type="button" data-nav="' + esc(navKey(group, partner)) + '"' +
         (current ? ' aria-current="true"' : '') + (expandable ? ' aria-expanded="' + !!children + '"' : '') +
         '><span>' + esc(label) + '</span><small>' + n + '</small></button>' + (children ? '<ul>' + children + '</ul>' : '') + '</li>';
@@ -483,18 +491,21 @@
   };
 
   var render = function () {
+    clearTimeout(timer);
     var searched = searchedItems();
-    var scoped = within(searched, deepest(), state.partners);
+    var available = within(searched, '', state.partners);
+    var scoped = within(available, deepest());
     renderMarks(markOptions(scoped));
     var list = state.marks.size ? scoped.filter(function (p) {
       return productMarks.get(p.id).some(function (mark) { return state.marks.has(mark); });
     }) : scoped;
-    var otherHits = state.q.trim() ? searched.length - scoped.length : 0;
+    var otherHits = state.q.trim() ? searched.length - list.length : 0;
     renderTree(searched, list.length);
     renderHeading();
     $('.tc-show').textContent = 'Показать товары (' + list.length + ')';
     cnt.innerHTML = 'Найдено позиций: ' + list.length +
-      (otherHits > 0 ? ' <button class="tc-else" type="button" data-all>Ещё ' + otherHits + ' в других разделах — искать везде</button>' : '');
+      (list.length ? '. Цена и наличие — у менеджера.' : '') +
+      (otherHits > 0 ? ' <button class="tc-else" type="button" data-all>Ещё ' + otherHits + ' без фильтров — искать везде</button>' : '');
     grid.innerHTML = list.length ? list.slice(0, state.shown).map(card).join('') :
       '<div class="tc-empty">Ничего не нашлось. Измените запрос или сбросьте фильтры.</div>';
     more.hidden = list.length <= state.shown;
@@ -503,29 +514,36 @@
     $('#tc-p-value').textContent = activePartner ? catalogMakers.get(activePartner) : state.partners.length ? 'Выбрано: ' + state.partners.length : 'Все производители';
     partnerFilter.querySelectorAll('input').forEach(function (input) { input.checked = state.partners.indexOf(input.value) >= 0; });
     root.querySelectorAll('.tc-pcard').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-partner') === activePartner ? 'true' : 'false'); });
-    root.querySelectorAll('.tc-chips:not(.tc-sub) .tc-chip').forEach(function (b) { var on = b.getAttribute('data-top') === state.top; b.setAttribute('aria-pressed', on ? 'true' : 'false'); if (on) b.parentNode.scrollLeft = Math.max(0, b.offsetLeft - b.parentNode.offsetLeft - 16); });
-    // счётчики видов и направлений — в пределах выбранных производителей; пустые прячем
-    var inP = within(D.items, '', state.partners);
-    root.querySelectorAll('[data-type],.tc-chips:not(.tc-sub) [data-top]:not([data-top=""])').forEach(function (b) { var id = b.getAttribute('data-type') || b.getAttribute('data-top'); var n = inP.filter(function (p) { return p.groups.indexOf(id) >= 0; }).length; b.querySelector('small').textContent = n; b.hidden = !n; });
-    root.querySelectorAll('[data-type]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-type') === deepest() ? 'true' : 'false'); });
-    var nIn = function (id) { return inP.filter(function (p) { return p.groups.indexOf(id) >= 0; }).length; };
-    var subs = state.top ? subsOf(state.top).filter(function (g) { return nIn(g.id); }) : [];
+    var nIn = function (id) { return within(available, id).length; };
+    root.querySelectorAll('[data-top], [data-type]').forEach(function (b) {
+      var type = b.getAttribute('data-type'), top = b.getAttribute('data-top'), id = type || top;
+      var on = type ? deepest() === type : top === state.top && (!!top || (!state.partners.length && !state.q.trim()));
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (id) {
+        var n = nIn(id);
+        b.querySelector('small').textContent = n;
+        b.hidden = !n && !on;
+      }
+      if (on && !type) b.parentNode.scrollLeft = Math.max(0, b.offsetLeft - b.parentNode.offsetLeft - 16);
+    });
+    var subs = state.top ? subsOf(state.top).filter(function (g) { return g.id === state.sub || nIn(g.id); }) : [];
     subBox.hidden = !subs.length;
     updateMarkup(subBox, subs.length ? '<button class="tc-chip" type="button" data-sub="" aria-pressed="' + (!state.sub) + '">Все в группе</button>' + subs.map(function (g) { return '<button class="tc-chip" type="button" data-sub="' + g.id + '" aria-pressed="' + (state.sub === g.id) + '">' + esc(g.name) + '<small>' + nIn(g.id) + '</small></button>'; }).join('') : '', 'data-sub');
-    var leaves = state.sub ? subsOf(state.sub).filter(function (g) { return nIn(g.id); }) : [];
+    var leaves = state.sub ? subsOf(state.sub).filter(function (g) { return g.id === state.leaf || nIn(g.id); }) : [];
     leafBox.hidden = !leaves.length;
     updateMarkup(leafBox, leaves.length ? '<button class="tc-chip" type="button" data-leaf="" aria-pressed="' + (!state.leaf) + '">Все: ' + esc(gName[state.sub].toLowerCase()) + '</button>' + leaves.map(function (g) { return '<button class="tc-chip" type="button" data-leaf="' + g.id + '" aria-pressed="' + (state.leaf === g.id) + '">' + esc(g.name) + '<small>' + nIn(g.id) + '</small></button>'; }).join('') : '', 'data-leaf');
     // «По виду» — быстрый вход с верхнего уровня; внутри направления хватает строк разделов
-    root.querySelector('.tc-types').hidden = !!state.top;
-    renderMakers();
+    $('.tc-types').hidden = !!state.top || !$('.tc-types [data-type]:not([hidden])');
+    renderMakers(searched);
   };
 
   // Переключатели производителей внутри выбранного раздела.
-  var renderMakers = function () {
+  var renderMakers = function (searched) {
     var g = deepest();
     if (!g) { makers.hidden = true; return; }
-    var inG = within(D.items, g);
+    var inG = within(searched, g);
     var n = makerCounts(inG);
+    state.partners.forEach(function (id) { if (!n.has(id)) n.set(id, 0); });
     var list = Array.from(n.keys()).sort(function (a, b) { return n.get(b) - n.get(a); });
     if (list.length < 2 && !state.partners.length) { makers.hidden = true; return; }
     makers.hidden = false;
@@ -537,7 +555,11 @@
       }).join(''), 'data-maker');
   };
 
-  var shareProduct = async function (p) {
+  var scrollTo = function (target) {
+    target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  };
+
+  var shareProduct = function (p) {
     var local = !/^https?:$/.test(location.protocol) || /(^|\.)localhost$|^127\.|^\[::1\]$/.test(location.hostname);
     var base = local ? 'https://armanved-source.github.io/torgagrohim/' : location.origin + location.pathname;
     var url = base + productHash(p.id);
@@ -545,24 +567,25 @@
     status.textContent = '';
     link.hidden = true;
 
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: p.name, url: url });
-        return;
-      } catch (error) {
-        if (error.name === 'AbortError') return;
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      status.textContent = 'Ссылка скопирована.';
-    } catch (error) {
+    var showLink = function () {
       status.textContent = 'Скопируйте ссылку на товар вручную.';
       link.value = url;
       link.hidden = false;
       // Пока открывалось системное меню, человек мог закрыть или сменить карточку.
       if (dlg.hasAttribute('open') && dlg.contains(link)) { link.focus(); link.select(); }
+    };
+    var copyLink = function () {
+      if (!navigator.clipboard || !navigator.clipboard.writeText) { showLink(); return; }
+      return navigator.clipboard.writeText(url).then(function () {
+        status.textContent = 'Ссылка скопирована.';
+      }, showLink);
+    };
+    if (navigator.share) {
+      return navigator.share({ title: p.name, url: url }).then(null, function (error) {
+        if (error.name !== 'AbortError') return copyLink();
+      });
     }
+    return copyLink();
   };
 
   var open = function (p) {
@@ -595,8 +618,11 @@
     return D.items.some(function (p) { return belongsTo(p, group, selected); });
   };
   // При смене раздела сохраняем только представленных в нём производителей.
+  var makersInGroup = function (group) {
+    return state.partners.filter(function (id) { return hasProducts(group, id); });
+  };
   var changeGroup = function (group) {
-    select(group, state.partners.filter(function (id) { return hasProducts(group, id); }));
+    select(group, makersInGroup(group));
   };
   var toggleMaker = function (id) {
     var group = deepest();
@@ -610,7 +636,7 @@
     clearTimeout(timer);
     state.q = '';
     state.marks.clear();
-    $('#tc-q').value = '';
+    query.value = '';
     select('', partner ? [partner] : []);
   };
 
@@ -624,9 +650,13 @@
 
   root.addEventListener('click', function (e) {
     var t = e.target.closest('button,a'); if (!t || !root.contains(t)) return;
-    if (t.hasAttribute('data-partner')) { var pid = t.getAttribute('data-partner'); showPartner(singlePartner() === pid ? '' : pid); }
+    if (t.hasAttribute('data-partner')) {
+      var pid = t.getAttribute('data-partner');
+      showPartner(singlePartner() === pid ? '' : pid);
+      partnerSummary.focus({ preventScroll: true });
+    }
     else if (t.hasAttribute('data-type')) { var tid = t.getAttribute('data-type'); changeGroup(deepest() === tid ? '' : tid); }
-    else if (t.hasAttribute('data-top')) changeGroup(t.getAttribute('data-top'));
+    else if (t.hasAttribute('data-top') && t.getAttribute('data-top')) changeGroup(t.getAttribute('data-top'));
     else if (t.hasAttribute('data-sub')) changeGroup(t.getAttribute('data-sub') || state.top);
     else if (t.hasAttribute('data-leaf')) changeGroup(t.getAttribute('data-leaf') || state.sub);
     else if (t.hasAttribute('data-maker')) toggleMaker(t.getAttribute('data-maker'));
@@ -644,7 +674,7 @@
     }
     else if (t.classList.contains('tc-show')) showResults();
     else if (t.hasAttribute('data-all')) select('', []);
-    else if (t.classList.contains('tc-reset')) reset('');
+    else if (t.hasAttribute('data-top') || t.classList.contains('tc-reset')) reset('');
     else if (t.classList.contains('tc-sidebar-toggle')) {
       t.setAttribute('aria-expanded', t.getAttribute('aria-expanded') !== 'true');
       revealTreeSelection();
@@ -657,10 +687,11 @@
       fromHash();
     }
   });
-  $('#tc-q').addEventListener('input', function (e) {
-    state.q = e.target.value;
+  query.addEventListener('input', function () {
+    state.q = query.value;
+    state.shown = PAGE;
     clearTimeout(timer);
-    timer = setTimeout(function () { state.shown = PAGE; render(); }, 180);
+    timer = setTimeout(render, 180);
   });
   $('.tc-marks').addEventListener('change', function (e) {
     var mark = e.target.getAttribute('data-mark');
@@ -682,9 +713,7 @@
   // Карточка партнёра: вся его продукция без других фильтров, прокрутка к списку
   var showPartner = function (id) {
     reset(id);
-    if (!id) return;
-    var bar = $('.tc-bar'); bar.style.scrollMarginTop = '84px';
-    bar.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    scrollTo(bar);
   };
 
   var fromHash = function (applyFilter) {
@@ -711,19 +740,20 @@
     catalogHash = hash;
 
     // Ссылки с карточек направлений и партнёров открывают каталог с фильтром.
+    if (hash === '#partners') { partnerList.open = true; scrollTo(partnerList); return; }
     var pm = /^#partner-([a-z0-9-]+)$/.exec(hash);
     if (pm && pCount[pm[1]]) { showPartner(pm[1]); return; }
     var m = /^#catalog-([a-z-]+)$/.exec(hash); if (!m) return;
-    var g = D.groups.filter(function (x) { return x.id === m[1]; })[0]; if (!g) return;
+    var g = gById[m[1]]; if (!g) return;
     changeGroup(g.id);
-    var sec = document.getElementById('catalog') || root; if (!sec.style.scrollMarginTop) sec.style.scrollMarginTop = '84px'; sec.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    scrollTo(bar);
   };
   window.addEventListener('hashchange', function () { fromHash(); });
   // Плитки направлений и логотипы партнёров на странице: открываем каталог на каждое нажатие,
   // а не только при смене адреса (повторное нажатие той же плитки hashchange не вызывает)
   document.addEventListener('click', function (e) {
     if (!partnerFilter.contains(e.target)) partnerFilter.open = false;
-    var a = e.target.closest && e.target.closest('a[href^="#catalog-"],a[href^="#partner-"]');
+    var a = e.target.closest && e.target.closest('a[href^="#catalog-"],a[href^="#partner-"],a[href="#partners"]');
     if (!a || root.contains(a)) return;
     e.preventDefault();
     if (history.replaceState) history.replaceState(null, '', a.getAttribute('href')); else location.hash = a.getAttribute('href');
