@@ -14,7 +14,7 @@
   var IMG = window.TAH_IMG || null; // в самодостаточных файлах картинки встроены
   var imgDir = root.getAttribute('data-img') || '../media/catalog/img/';
   var PAGE = 12;
-  var LOGO = { bashinkom: 'bashinkom.png', uralchem: 'uralchem.png', eurochem: 'eurochem.svg', polyfeed: 'polyfeed.svg', biogrow: 'biogrow.png', bui: 'bui.png', acron: 'acron.png', daymsa: 'daymsa.png', pharmbiomed: 'pharmbiomed.png', agrosintez: 'agrosintez.png', nestm: 'nestm.png', mcfp: 'mcfp.png', biolchim: 'biolchim.png', ikar: 'ikar.svg', himagromarketing: 'himagromarketing.png', fertika: 'fertika.png', agrohimsintez: 'agrohimsintez.png' };
+  var LOGO = { bashinkom: 'bashinkom.png', uralchem: 'uralchem.png', eurochem: 'eurochem.svg', polyfeed: 'polyfeed.svg', biogrow: 'biogrow.png', bui: 'bui.png', acron: 'acron.png', daymsa: 'daymsa.png', pharmbiomed: 'pharmbiomed.png', agrosintez: 'agrosintez.png', nestm: 'nestm.png', mcfp: 'mcfp.png', biolchim: 'biolchim.png', ikar: 'ikar.svg', himagromarketing: 'himagromarketing.png', fertika: 'fertika.png', agrohimsintez: 'agrohimsintez.png', phosagro: 'phosagro.svg' };
   var logoDir = root.getAttribute('data-logos') || '../media/partners/';
   var logoSrc = function (id) { var f = LOGO[id]; if (!f) return ''; return (window.TAH_LOGO && window.TAH_LOGO[f]) || logoDir + f; };
 
@@ -177,6 +177,7 @@
     ['Диаммофоска', /диаммофоск/i],
     ['Сульфоаммофос', /сульфоаммофос/i],
     ['Аммофос', /(?:^|[^а-яё])аммофос/i],
+    ['Диаммонийфосфат', /диаммоний\s*фосфат|диаммофос(?!к)|(?:^|[^а-яёa-z])даф(?![а-яёa-z])/i],
     ['Селитра известково-аммиачная', /селитра\s+известково[- ]аммиачная|известково[- ]аммиачная\s+селитра/i],
     ['Аммиачная селитра', /аммиачная\s+селитра|селитра\s+аммиачная|аммиачно[- ]нитратное/i],
     ['Кальциевая селитра', /кальциевая\s+селитра|селитра\s+кальциевая|нитрат\s+кальция/i],
